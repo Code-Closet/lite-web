@@ -1,0 +1,1 @@
+Pixell Lite web application developed using React. The repository is designed in such a way that there will be a main react application and package library. All the generic components are developed as separate packages which can be used in the main app.
