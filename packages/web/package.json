@@ -1,0 +1,60 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.54",
+    "@types/react": "^18.2.22",
+    "@types/react-dom": "^18.2.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.9.5",
+    "web-vitals": "^2.1.4"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.7.3",
+    "@typescript-eslint/parser": "^6.7.3",
+    "button": "file:../button",
+    "eslint": "^8.50.0",
+    "eslint-plugin-jest": "^27.4.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-testing-library": "^6.0.2",
+    "ts-jest": "^29.1.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "tsc",
+    "test": "jest",
+    "test:ci": "jest --coverage --silent",
+    "eject": "react-scripts eject",
+    "lint": "npx eslint . --ext .tsx,.ts src/",
+    "lint-staged": "lint-staged"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "lint-staged": {
+    "*": "prettier --write --ignore-unknown",
+    "*.{tsx,ts}": "eslint --cache --fix"
+  }
+}

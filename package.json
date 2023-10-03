@@ -1,0 +1,17 @@
+{
+  "name": "root",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {
+    "jest": "^29.7.0",
+    "tsc": "^2.0.4",
+    "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "lerna": "^7.3.0",
+    "rollup-plugin-postcss": "^4.0.2",
+    "yarn": "^1.22.19"
+  }
+}
