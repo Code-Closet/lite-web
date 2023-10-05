@@ -24,6 +24,7 @@
     "eslint-plugin-jest": "^27.4.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-testing-library": "^6.0.2",
+    "husky": "^8.0.3",
     "ts-jest": "^29.1.1"
   },
   "scripts": {
@@ -33,6 +34,7 @@
     "test:ci": "jest --coverage --silent",
     "eject": "react-scripts eject",
     "lint": "npx eslint . --ext .tsx,.ts src/",
+    "prepare": "husky install",
     "lint-staged": "lint-staged"
   },
   "eslintConfig": {
