@@ -1,0 +1,10 @@
+node_modules
+**/dist
+**/build
+lerna-debug.log
+**/.DS_Store
+.scannerwork
+sonarqube/extensions
+sonarqube/data
+sonarqube/logs
+

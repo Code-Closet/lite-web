@@ -1,0 +1,21 @@
+{
+  "name": "root",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {
+    "jest": "^29.7.0",
+    "tsc": "^2.0.4",
+    "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "lerna": "^7.3.0",
+    "lint-staged": "^14.0.1",
+    "mrm": "^2.6.2",
+    "prettier": "^3.0.3",
+    "rollup-plugin-postcss": "^4.0.2",
+    "sonarqube-scanner": "^3.1.0",
+    "yarn": "^1.22.19"
+  }
+}
