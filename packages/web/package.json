@@ -34,7 +34,6 @@
     "test:ci": "jest --coverage --silent",
     "eject": "react-scripts eject",
     "lint": "npx eslint . --ext .tsx,.ts src/",
-    "prepare": "husky install",
     "lint-staged": "lint-staged"
   },
   "eslintConfig": {
