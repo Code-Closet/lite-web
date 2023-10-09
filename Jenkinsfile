@@ -41,5 +41,13 @@ pipeline {
                 }
             }
         }
+        stage('deploy'){
+            steps {
+                script {
+                    echo "Deploying ..."
+                    sh 'aws s3 sync $WORKSPACE/packages/web/build s3://dev-pixellpay-web/ --sse --profile default'
+                }
+            }
+        }
     }
 }
