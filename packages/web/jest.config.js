@@ -10,6 +10,9 @@ module.exports = {
       },
     ],
   },
+  moduleNameMapper: {
+    "\\.(css|less|scss|sass)$": "identity-obj-proxy",
+  },
   setupFilesAfterEnv: ["./src/jest.setup.ts"],
   coverageThreshold: {
     global: {
