@@ -1,0 +1,51 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-box {
+  padding: 12rem 2rem;
+  display: grid;
+  height: 600px;
+  border-left: 1px solid #b5b5b5;
+  margin-left: 10rem;
+
+  div {
+    display: flex;
+    margin-right: 2rem;
+    height: 2rem;
+    margin-inline: 5rem;
+  }
+
+  label {
+    padding-inline: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #5a5857;
+  }
+
+  input {
+    padding: 0.5rem;
+    border: 1px solid #b5b5b5;
+    border-radius: 5px;
+    outline: none;
+    margin-inline-start: 2rem;
+    width: 16rem;
+  }
+
+  button {
+    margin-left: 39%;
+    height: 2rem;
+    width: 16rem;
+    border: 1px solid purple;
+    border-radius: 20px;
+    color: purple;
+    font-weight: 600;
+  }
+
+  button:hover {
+    background-color: purple;
+    color: white;
+  }
+}

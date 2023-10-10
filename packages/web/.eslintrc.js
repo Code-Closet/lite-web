@@ -28,5 +28,6 @@ module.exports = {
   plugins: ["@typescript-eslint", "react"],
   rules: {
     "@typescript-eslint/no-floating-promises": "off",
+    "@typescript-eslint/no-redundant-type-constituents": "off",
   },
 };

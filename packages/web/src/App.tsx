@@ -1,13 +1,14 @@
-import React from "react";
-import Button from "button";
+import React, { Fragment } from "react";
 import Footer from "footer";
+import { RouterProvider } from "react-router-dom";
+import router from "./router/Routes";
 
 function App() {
   return (
-    <div>
-        <Button label={"CRA Button"}></Button>
-        <Footer></Footer>
-    </div>
+    <Fragment>
+      <RouterProvider router={router} />
+      <Footer></Footer>
+    </Fragment>
   );
 }
 
