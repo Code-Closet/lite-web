@@ -12,7 +12,7 @@ const Login: React.FC = () => {
       <div className={classes["login-box"]}>
         <div>
           <label>Username</label>
-          <input></input>
+          <input type="text" id="username"></input>
         </div>
 
         <div>
