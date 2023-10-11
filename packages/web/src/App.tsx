@@ -1,13 +1,15 @@
-import React, { Fragment } from "react";
 import Footer from "footer";
-import { RouterProvider } from "react-router-dom";
-import router from "./router/Routes";
+import { BrowserRouter } from "react-router-dom";
+import { AuthGuard } from "./auth/AuthGuard";
+import { Fragment } from "react";
 
 function App() {
   return (
     <Fragment>
-      <RouterProvider router={router} />
-      <Footer></Footer>
+      <BrowserRouter>
+        <AuthGuard />
+      </BrowserRouter>
+      <Footer />
     </Fragment>
   );
 }
