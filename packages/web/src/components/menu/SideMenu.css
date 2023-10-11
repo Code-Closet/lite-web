@@ -1,0 +1,15 @@
+.menu {
+  background-color: #490f93;
+  text-align: center;
+  padding: 15px 0;
+}
+
+.menu .menuItem {
+  display: inline-block;
+  margin: 0 30px;
+}
+
+.menu .menuItem a {
+  color: #fff;
+  text-decoration: none;
+}

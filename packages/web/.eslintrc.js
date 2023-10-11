@@ -7,6 +7,7 @@ module.exports = {
     "plugin:jest/recommended",
     "plugin:jest/style",
     "plugin:testing-library/react",
+    "plugin:react/jsx-runtime",
   ],
   overrides: [
     {
