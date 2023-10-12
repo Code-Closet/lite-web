@@ -20,7 +20,9 @@
     "@typescript-eslint/eslint-plugin": "^6.7.3",
     "@typescript-eslint/parser": "^6.7.3",
     "autoprefixer": "^10.4.16",
+    "axios": "^1.5.1",
     "button": "file:../button",
+    "env-cmd": "^10.1.0",
     "eslint": "^8.50.0",
     "eslint-plugin-jest": "^27.4.0",
     "eslint-plugin-react": "^7.33.2",
@@ -35,7 +37,7 @@
     "ts-jest": "^29.1.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "env-cmd -f dev.env react-scripts start",
     "build": "rimraf build && tsc && react-scripts build",
     "test": "jest",
     "test:ci": "jest --coverage --silent",

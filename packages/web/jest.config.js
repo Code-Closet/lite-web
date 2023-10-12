@@ -12,6 +12,7 @@ module.exports = {
   },
   moduleNameMapper: {
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",
+    axios: "axios/dist/node/axios.cjs",
   },
   setupFilesAfterEnv: ["./src/jest.setup.ts"],
   coverageThreshold: {
