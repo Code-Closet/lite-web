@@ -1,9 +1,10 @@
 import React from "react";
+import "../styles/global.scss";
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <main>
-      <div className="w-[100%] overflow-auto">{children}</div>
+      <div className="layout">{children}</div>
     </main>
   );
 };

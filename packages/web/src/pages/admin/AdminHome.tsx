@@ -1,7 +1,12 @@
 import React from "react";
+import PixellPayDataTable from "../../components/table/PixellPayDataTable";
 
 const AdminHome: React.FC = () => {
-  return /*#__PURE__*/ React.createElement("div", null, "Admin Home");
+  return (
+    <>
+      <PixellPayDataTable />
+    </>
+  );
 };
 
 export default AdminHome;
