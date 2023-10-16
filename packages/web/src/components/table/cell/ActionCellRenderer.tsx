@@ -2,15 +2,20 @@ import { ICellRendererParams } from "ag-grid-community";
 import "./CustomCellRenderer.css";
 import { User } from "../../../api/admin/admin";
 
-const ActionCellRenderer = (props: ICellRendererParams<User, string>) => {
-  const cellValue = props?.valueFormatted ? props.valueFormatted : props.value;
+export interface ActionCellRendererParams extends ICellRendererParams {
+  onEditUser: (user: User) => void;
+  onDeleteUser: (user: User) => void;
+}
+
+const ActionCellRenderer = (props: ActionCellRendererParams) => {
+  //const cellValue = props?.valueFormatted ? props.valueFormatted : props.value;
 
   const handleModifyUser = () => {
-    console.log(`Modify User : ${cellValue}`);
+    props.onEditUser(props.data as User);
   };
 
   const handleRemoveUser = () => {
-    console.log(`Remove User : ${cellValue}`);
+    props.onDeleteUser(props.data as User);
   };
 
   return (

@@ -1,0 +1,13 @@
+.name-field {
+  display: grid;
+  height: 4rem;
+  justify-content: left;
+  text-align: left;
+  margin-left: 2rem;
+}
+
+.name-field .email {
+  line-height: 0;
+  margin-top: -10px;
+  font-size: 12px;
+}

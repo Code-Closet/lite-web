@@ -20,3 +20,7 @@
 .ag-theme-alpine .ag-header-cell-text {
   margin-inline: auto;
 }
+
+.ag-theme-alpine .ag-paging-panel {
+  color: #818f9a;
+}

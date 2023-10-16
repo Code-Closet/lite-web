@@ -31,5 +31,7 @@ module.exports = {
     "@typescript-eslint/no-floating-promises": "off",
     "@typescript-eslint/no-redundant-type-constituents": "off",
     "@typescript-eslint/no-unsafe-member-access": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "react/prop-types": "off",
   },
 };
