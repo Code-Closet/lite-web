@@ -6,20 +6,25 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import "./style.css";
 
-import { User, generateUsers } from "../../api/admin/admin";
+import { User, generateUsers, getRoles } from "../../api/admin/admin";
 import StatusRenderer from "./cell/StatusCellRenderer";
 import NameRenderer from "./cell/NameCellRenderer";
 import RoleRenderer from "./cell/RoleCellRenderer";
 import ActionCellRenderer from "./cell/ActionCellRenderer";
-import Modal from "../modal/Modal";
+import Modal, { ModalVariant } from "../modal/Modal";
 import DeleteUserModal from "../modal/admin/DeleteUserModal";
+import ModifyUserModal from "../modal/admin/ModifyUserModal";
+import PixellpayToast from "../toast/PixellpayToast";
+import { toast } from "react-toastify";
 
 const PixellPayDataTable: React.FC = () => {
   const [modifyUserModal, setModifyUserModal] = useState<boolean>(false);
   const [deleteUserModal, setDeleteUserModal] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [modifiedUser, setModifiedUser] = useState<User | null>(null);
   const gridRef = useRef<AgGridReact<User>>(null);
   const [rowData, setRowData] = useState<User[]>();
+  const [roles, setRoles] = useState<{ value: string; label: string }[]>([]);
 
   const defaultColDef = useMemo<ColDef>(() => {
     return {
@@ -43,17 +48,34 @@ const PixellPayDataTable: React.FC = () => {
     // api to delete user
     setDeleteUserModal(false);
     setSelectedUser(null);
-    // toast message
+    toast.success("User deleted successfully");
+    onGridReady();
   }, [selectedUser]);
+
+  const onModifyUserConfirm = useCallback(() => {
+    console.log("modify user", modifiedUser);
+    // api to modify user
+    setModifyUserModal(false);
+    setSelectedUser(null);
+    toast.success("User modified successfully");
+    onGridReady();
+  }, [selectedUser, modifiedUser]);
 
   const onGridReady = useCallback(() => {
     // API goes here
     setRowData(generateUsers(100000));
     sizeToFit();
+    initRoles();
   }, []);
 
   const sizeToFit = useCallback(() => {
     gridRef.current!.api.sizeColumnsToFit();
+  }, []);
+
+  const initRoles = useCallback(() => {
+    getRoles().then((roles) => {
+      setRoles(roles);
+    });
   }, []);
 
   const [columnDefs] = useState<ColDef[]>([
@@ -79,16 +101,31 @@ const PixellPayDataTable: React.FC = () => {
 
   return (
     <Fragment>
+      <PixellpayToast />
       {modifyUserModal && !!selectedUser && (
-        <Modal setOpenModal={setModifyUserModal} />
+        <Modal
+          setOpenModal={setModifyUserModal}
+          proceedText="Update"
+          title="Modify User"
+          variant={ModalVariant.Regular}
+          onProceed={onModifyUserConfirm.bind(this)}
+        >
+          <ModifyUserModal
+            user={selectedUser}
+            roles={roles}
+            modifiedUser={selectedUser}
+            setModifiedUser={setModifiedUser}
+          />
+        </Modal>
       )}
       {deleteUserModal && !!selectedUser && (
         <Modal
           setOpenModal={setDeleteUserModal}
           proceedText="Delete"
           onProceed={onDeleteUserConfirm.bind(this)}
+          variant={ModalVariant.Tiny}
         >
-          <DeleteUserModal />
+          <DeleteUserModal user={selectedUser} />
         </Modal>
       )}
       <div className="ag-theme-alpine" id="ag-grid-container">

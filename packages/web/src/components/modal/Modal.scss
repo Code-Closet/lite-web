@@ -3,7 +3,7 @@
   height: 90vh;
   margin: 2rem 0;
   background-color: rgba(200, 200, 200);
-  opacity: 0.85;
+  opacity: 0.95;
   position: fixed;
   display: flex;
   justify-content: center;
@@ -12,14 +12,29 @@
 }
 
 .modalContainer {
-  width: 500px;
-  height: 500px;
   border-radius: 12px;
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   display: flex;
   flex-direction: column;
   padding: 25px;
+}
+
+.compact-modal {
+  width: 500px;
+  height: 500px;
+}
+
+.tiny-modal {
+  width: 350px;
+  height: 350px;
+}
+
+.regular-modal {
+  width: auto;
+  height: auto;
+  min-width: 45%;
+  min-height: 70%;
 }
 
 .modalContainer .title {
@@ -63,8 +78,8 @@
 }
 
 .modalContainer .footer button {
-  width: 30%;
-  height: 60%;
+  width: 25%;
+  min-height: 30px;
   margin: 10px;
   border: none;
   background-color: cornflowerblue;

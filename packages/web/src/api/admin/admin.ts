@@ -79,3 +79,16 @@ export const generateUsers = (count: number): User[] => {
   }
   return DUMMY_USERS;
 };
+
+export const getRoles = (): Promise<{ value: string; label: string }[]> => {
+  return Promise.resolve(DUMMY_ROLES);
+};
+
+const DUMMY_ROLES: { value: string; label: string }[] = [
+  { value: "admin", label: "Admin" },
+  { value: "customer", label: "Customer" },
+  { value: "agent", label: "Agent" },
+  { value: "maker", label: "Maker" },
+  { value: "l1_approver", label: "L1 Approver" },
+  { value: "l2_approver", label: "L2 Approver" },
+];

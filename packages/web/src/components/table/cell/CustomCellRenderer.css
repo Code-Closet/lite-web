@@ -21,8 +21,8 @@
 
 .role-field {
   display: flex;
-  width: 23%;
-  height: 23px;
+  max-width: 35%;
+  min-height: 23px;
   margin-top: 15px;
   border-radius: 10px;
   font-size: 12px;

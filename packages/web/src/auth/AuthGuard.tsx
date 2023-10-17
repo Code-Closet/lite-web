@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { RenderRoutes } from "../router/RenderRoutes";
-import SideMenu from "../components/menu/SideMenu";
+//import SideMenu from "../components/menu/SideMenu";
 import { authenticateUser, authenticateUser1 } from "../api/auth/auth";
 
 interface AuthContextProps {
@@ -59,7 +59,6 @@ export const AuthGuard = () => {
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
       <>
-        <SideMenu />
         <RenderRoutes />
       </>
     </AuthContext.Provider>

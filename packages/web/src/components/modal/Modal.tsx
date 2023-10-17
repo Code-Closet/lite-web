@@ -1,5 +1,17 @@
 import "./Modal.scss";
 
+export enum ModalVariant {
+  Compact = "compact",
+  Regular = "regular",
+  Tiny = "tiny",
+}
+
+const modalContainerClass: { [name: string]: string } = {
+  [ModalVariant.Compact]: "compact-modal",
+  [ModalVariant.Regular]: "regular-modal",
+  [ModalVariant.Tiny]: "tiny-modal",
+};
+
 interface ModalProps {
   setOpenModal: (status: boolean) => void;
   children?: React.ReactNode;
@@ -7,6 +19,7 @@ interface ModalProps {
   proceedText?: string;
   cancelText?: string;
   onProceed?: () => void;
+  variant?: ModalVariant;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -16,10 +29,11 @@ const Modal: React.FC<ModalProps> = ({
   title = "Are You Sure You Want to Continue?",
   proceedText = "Continue",
   cancelText = "Cancel",
+  variant = ModalVariant.Compact,
 }) => {
   return (
     <div className="modalBackground">
-      <div className="modalContainer">
+      <div className={`modalContainer ${modalContainerClass[variant]}`}>
         <div className="titleCloseBtn">
           <button
             onClick={() => {
