@@ -1,0 +1,48 @@
+.modify-user-container {
+  height: 80%;
+  padding: 2rem 1rem;
+  border-top: 1px solid #e7e9eb;
+}
+
+.modify-text-desc {
+  justify-items: left;
+  display: grid;
+  justify-content: start;
+  font-size: 14px;
+  color: #818ba0;
+  gap: 10px;
+}
+
+.modify-text-desc .label {
+  line-height: 0;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.modfiy-input-row {
+  display: flex;
+  justify-content: left;
+  justify-items: left;
+  text-align: left;
+  font-size: 16px;
+  color: #818ba0;
+  height: 25%;
+  gap: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+.modify-input-field {
+  display: grid;
+  gap: 5px;
+  width: 45%;
+}
+
+.modify-input-field span {
+  margin: auto 0;
+  font-weight: bold;
+}
+
+.basic-single {
+  width: 45%;
+  margin-top: 5px;
+}
