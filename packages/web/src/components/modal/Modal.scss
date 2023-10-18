@@ -9,6 +9,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1;
+  overflow: auto;
 }
 
 .modalContainer {
@@ -91,4 +92,8 @@
 
 #cancelBtn {
   background-color: crimson;
+}
+
+.ag-theme-alpine .ag-header-cell-resize {
+  display: none;
 }

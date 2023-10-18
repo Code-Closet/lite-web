@@ -86,9 +86,15 @@ const PixellPayDataTable: React.FC = () => {
         return `${params.data?.name}~~${params.data?.email}`;
       },
       cellRenderer: NameRenderer,
+      flex: 2,
     },
-    { field: "status", headerName: "", cellRenderer: StatusRenderer },
-    { field: "role", headerName: "User Role", cellRenderer: RoleRenderer },
+    { field: "status", headerName: "", cellRenderer: StatusRenderer, flex: 1 },
+    {
+      field: "role",
+      headerName: "User Role",
+      cellRenderer: RoleRenderer,
+      flex: 2,
+    },
     {
       headerName: "Actions",
       cellRenderer: ActionCellRenderer,
@@ -96,6 +102,7 @@ const PixellPayDataTable: React.FC = () => {
         onEditUser: onModifyUser.bind(this),
         onDeleteUser: onDeleteUser.bind(this),
       },
+      flex: 2,
     },
   ]);
 
@@ -138,6 +145,7 @@ const PixellPayDataTable: React.FC = () => {
           rowHeight={60}
           pagination={true}
           paginationPageSize={15}
+          onGridSizeChanged={sizeToFit}
         ></AgGridReact>
       </div>
     </Fragment>
