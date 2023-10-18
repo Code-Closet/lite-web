@@ -1,0 +1,19 @@
+.admin-container {
+  display: block;
+  margin-top: 2rem;
+  height: 93%;
+  justify-content: center;
+  justify-items: center;
+}
+
+.admin-container > button {
+  color: #fff;
+  font-size: 18px;
+  margin-left: 85%;
+  border: 1px solid #818f9a;
+  border-radius: 5px;
+  width: 8rem;
+  height: 1.75rem;
+  background-color: #56887d;
+  font-weight: bold;
+}

@@ -1,7 +1,7 @@
 #ag-grid-container {
-  height: 93%;
+  height: inherit;
   width: 97%;
-  margin: 2rem 1rem;
+  margin: 1rem 1rem;
 }
 .ag-theme-alpine {
   --ag-header-foreground-color: rgb(255, 255, 255);
