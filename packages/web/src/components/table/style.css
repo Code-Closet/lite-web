@@ -1,12 +1,12 @@
 #ag-grid-container {
-  height: inherit;
+  height: calc(100% - 5rem);
   width: 97%;
   margin: 1rem 1rem;
 }
 .ag-theme-alpine {
-  --ag-header-foreground-color: rgb(255, 255, 255);
-  --ag-header-background-color: #818f9a;
-  --ag-odd-row-background-color: rgb(0, 0, 0, 0.03);
+  --ag-header-foreground-color: var(--primary-text-color);
+  --ag-header-background-color: var(--nav-color);
+  --ag-odd-row-background-color: var(--body-color);
   --ag-header-column-resize-handle-color: #818f9a;
 
   --ag-font-size: 16px;
@@ -23,4 +23,8 @@
 
 .ag-theme-alpine .ag-paging-panel {
   color: #818f9a;
+}
+
+.ag-theme-alpine .ag-header-cell-resize {
+  display: none;
 }

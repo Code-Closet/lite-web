@@ -4,12 +4,30 @@
 
 @import "tailwindcss/utilities";
 
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+
 * {
   box-sizing: border-box;
   padding: 0%;
   margin: 0%;
   text-rendering: optimizeSpeed;
-  font-family: "Roboto", sans-serif;
+  font-family: "Poppins", sans-serif;
+}
+
+:root {
+  /*===== Colors =====*/
+  --body-color: #fff;
+  --nav-color: #f4f7fe;
+  --primary-color: #3399ff;
+  --primary-color-light: #8fa4ed;
+  --secondary-color: #f2f2f2;
+  --primary-text-color: #1b1b1b;
+  --secondary-text-color: #aca6a6;
+
+  /*===== Transition =====*/
+  --tran-02: all 0.2s ease;
+  --tran-03: all 0.3s ease;
+  --tran-04: all 0.4s ease;
 }
 
 main {
@@ -17,13 +35,19 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  //min-height: 80vh;
+  background: var(--body-color);
 }
 
 .layout {
-  width: 100%;
+  width: calc(100% - 250px);
+  left: 250px;
   height: 90vh;
   overflow: hidden;
-  position: relative;
-  margin-top: 2rem;
+  position: sticky;
+  //margin-top: 2rem;
+}
+
+.sidebar.close ~ .layout {
+  width: calc(100% - 85px);
+  left: 85px;
 }
