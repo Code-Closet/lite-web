@@ -34,6 +34,7 @@ const AdminHome: React.FC = () => {
         <Modal
           setOpenModal={setOpenModal}
           title="Add User"
+          proceedText="Add"
           variant={ModalVariant.Regular}
           onProceed={onAddNewUser}
         >
@@ -42,6 +43,7 @@ const AdminHome: React.FC = () => {
       )}
       <div className="admin-container">
         <button type="button" onClick={() => setOpenModal(true)}>
+          <i className={`bx bx-user-plus`}></i>
           Add User
         </button>
         <PixellPayDataTable />
