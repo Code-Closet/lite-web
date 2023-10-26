@@ -63,7 +63,7 @@ const PixellPayDataTable: React.FC = () => {
 
   const onGridReady = useCallback(() => {
     // API goes here
-    setRowData(generateUsers(100000));
+    setRowData(generateUsers(10000));
     sizeToFit();
     initRoles();
   }, []);

@@ -75,15 +75,5 @@ pipeline {
                 }
             }
         }
-
-        stage('Deploy to ECS') {
-            steps {
-                script {
-                    // Assuming AWS CLI is installed and configured on your Jenkins server
-                    //sh "aws ecs update-service --cluster arn:aws:ecs:ap-south-1:871995868589:cluster/dev-lite-api-cluster --service arn:aws:ecs:ap-south-1:871995868589:service/dev-lite-api-cluster/lite-api-service --force-new-deployment"
-                }
-            }
-        }
-        
     }
 }
