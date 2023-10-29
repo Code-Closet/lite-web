@@ -3,6 +3,7 @@ import WalletHome from "../pages/wallet/WalletHome";
 import Login from "../pages/login/Login";
 import Transactions from "../pages/wallet/Transactions";
 import AccountBulkHome from "../pages/account/AccountBulkHome";
+import AccountHome from "../pages/account/AccountHome";
 
 export interface V6Route {
   path: string;
@@ -57,7 +58,7 @@ const navigation: V6Route[] = [
   {
     path: "/accounts",
     title: "Accounts",
-    element: <WalletHome />,
+    element: <AccountHome />,
     isMenu: true,
     isPrivate: true,
   },

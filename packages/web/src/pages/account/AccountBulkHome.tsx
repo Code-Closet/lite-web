@@ -28,7 +28,11 @@ const AccountBulkHome: React.FC = () => {
           setSelectedBatch={setSelectedBatch}
         />
       </div>
-      <div className={`account-details ${!isSummaryView ? "slide-right" : ""}`}>
+      <div
+        className={`account-bulk-details ${
+          !isSummaryView ? "slide-right" : ""
+        }`}
+      >
         {selectedBatch && <AccountsLoadDetailsTable account={selectedBatch} />}
         <button type="button" onClick={() => setIsSummaryView((prev) => !prev)}>
           <i className="bx bx-arrow-back"></i>

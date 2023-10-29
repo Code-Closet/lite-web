@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { AuthData } from "../../auth/AuthGuard";
 import "./SideMenu.css";
 import navigation, { V6Route } from "../../router/Routes";
@@ -17,13 +17,17 @@ const iconMap: { [key: string]: string } = {
 const SideMenu: React.FC = () => {
   const { user, logout } = AuthData();
   const [collapsed, setCollapsed] = useState<boolean>(false);
+  const location = useLocation();
+
   const MenuItem = ({ r }: { r: V6Route }) => {
     const path = r.children?.length
       ? `${r.path}/${r.children[0].path}`
       : r.path;
     return (
       <li>
-        <span className="menu-item">
+        <span
+          className={`menu-item ${location.pathname === path ? "active" : ""}`}
+        >
           <i className={`bx ${iconMap[r.title ?? ""]} icon`}></i>
           <Link to={path ?? "/"} className="nav-link">
             {r.title}

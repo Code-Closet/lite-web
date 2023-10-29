@@ -91,12 +91,15 @@
   transition: var(--tran-04);
 }
 
-.sidebar li span:hover {
+.sidebar li span:hover,
+.sidebar li span.active {
   background: var(--primary-color-light);
 }
 
 .sidebar li span:hover .icon,
-.sidebar li span:hover .nav-link {
+.sidebar li span:hover .nav-link,
+.sidebar li span.active .icon,
+.sidebar li span.active .nav-link {
   color: var(--secondary-color);
 }
 
