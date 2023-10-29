@@ -1,0 +1,67 @@
+.account-container {
+  position: relative;
+}
+
+.account-load-action {
+  height: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-inline: 2rem;
+  margin-top: 1rem;
+  border-bottom: 1px solid var(--secondary-text-color);
+}
+
+.account-summary,
+.account-details {
+  width: 100%;
+  height: calc(90vh - 5rem);
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  left: 0;
+  top: 5rem;
+  transition: transform 0.5s ease-in-out;
+  gap: 5px;
+}
+
+.account-summary {
+  z-index: 2;
+}
+
+.account-details {
+  height: calc(90vh - 6rem);
+  z-index: 1;
+  transform: translateX(100%);
+}
+
+.slide-left {
+  transform: translateX(-100%);
+}
+
+.slide-right {
+  transform: translateX(0%);
+}
+
+.account-container .header {
+  font-weight: 500;
+  width: 65%;
+  font-size: 24px;
+  color: var(--primary-text-color);
+}
+
+.account-container button {
+  color: #fff;
+  font-size: 18px;
+  border-radius: 5px;
+  width: 8rem;
+  height: 2rem;
+  background-color: var(--primary-color);
+  font-weight: 400;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}

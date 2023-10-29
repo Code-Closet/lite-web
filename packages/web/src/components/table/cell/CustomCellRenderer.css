@@ -40,10 +40,17 @@
   margin-inline: 2rem;
 }
 
-.action-field .action-button {
+.action-field .action-button,
+.wallet-detail-action-button {
   display: flex;
   color: rgb(129, 143, 154);
   margin-inline: 2rem;
   gap: 5px;
   cursor: pointer;
+}
+
+.wallet-detail-action-button {
+  margin-top: 10px;
+  font-size: 24px;
+  color: var(--primary-color);
 }

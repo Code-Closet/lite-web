@@ -4,7 +4,7 @@ import { ColDef } from "ag-grid-community";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import "./style.css";
+import "./style.scss";
 
 import { User, generateUsers, getRoles } from "../../api/admin/admin";
 import StatusRenderer from "./cell/StatusCellRenderer";

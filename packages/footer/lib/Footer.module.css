@@ -3,20 +3,16 @@ footer {
   bottom: 0;
   width: 100%;
   height: 2rem;
-  width: 90%;
-  padding-inline: 35%;
+  padding-inline: 10%;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #5a5857;
 }
-text {
+
+footer span {
   font-family: ui-sans-serif;
   font-size: 13px;
   letter-spacing: 0.5px;
-  color: #5a5857;
   margin-left: 3px;
-}
-
-.content {
-  width: 90%;
-  margin-left: 5rem;
-  display: flex;
 }
