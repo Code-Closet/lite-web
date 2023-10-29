@@ -1,12 +1,14 @@
 import React from "react";
-import styled from "styled-components";
-import  './Footer.module.css';
+import "boxicons";
+import "./Footer.module.css";
 
 const Footer: React.FC = () => {
-    return <footer className="content">
-        <img src="logo/copyright.svg" alt="Copyright" style={{height: 13}}></img>
-        <text>Pixellpay Innovations Private Limited, All rights reserved.</text>
+  return (
+    <footer>
+      <i className="bx bx-copyright"></i>
+      <span>Pixellpay Innovations Private Limited, All rights reserved.</span>
     </footer>
+  );
 };
 
 export default Footer;

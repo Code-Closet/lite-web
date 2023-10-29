@@ -41,6 +41,7 @@
     "tslib": "^2.6.2"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "boxicons": "^2.1.4"
   }
 }

@@ -11,6 +11,21 @@ export const RenderRoutes = () => {
       <Route path="/" element={<PageOutlet />}>
         {navigation.map((route, index) => {
           if (!route.isPrivate || (route.isPrivate && user.isAuthenticated)) {
+            if (route.children?.length ?? 0 > 0) {
+              return (
+                <Route key={index} path={route.path} element={route.element}>
+                  {route.children?.map((child, index) => {
+                    return (
+                      <Route
+                        key={index}
+                        path={child.path}
+                        element={child.element}
+                      />
+                    );
+                  })}
+                </Route>
+              );
+            }
             return (
               <Route key={index} path={route.path} element={route.element} />
             );

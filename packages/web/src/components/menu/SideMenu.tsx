@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { AuthData } from "../../auth/AuthGuard";
 import "./SideMenu.css";
 import navigation, { V6Route } from "../../router/Routes";
@@ -7,7 +7,8 @@ import { useState } from "react";
 const iconMap: { [key: string]: string } = {
   Dashboard: "bx-home",
   "Manage User": "bx-user-plus",
-  Transactions: "bx-wallet",
+  "Bulk Transactions": "bx-wallet",
+  Accounts: "bxs-bank",
   Reports: "bx-bar-chart-alt-2",
   Approvals: "bx-like",
   Settings: "bx-cog",
@@ -16,12 +17,19 @@ const iconMap: { [key: string]: string } = {
 const SideMenu: React.FC = () => {
   const { user, logout } = AuthData();
   const [collapsed, setCollapsed] = useState<boolean>(false);
+  const location = useLocation();
+
   const MenuItem = ({ r }: { r: V6Route }) => {
+    const path = r.children?.length
+      ? `${r.path}/${r.children[0].path}`
+      : r.path;
     return (
       <li>
-        <span className="menu-item">
+        <span
+          className={`menu-item ${location.pathname === path ? "active" : ""}`}
+        >
           <i className={`bx ${iconMap[r.title ?? ""]} icon`}></i>
-          <Link to={r.path} className="nav-link">
+          <Link to={path ?? "/"} className="nav-link">
             {r.title}
           </Link>
         </span>

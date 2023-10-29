@@ -1,6 +1,9 @@
 import AdminHome from "../pages/admin/AdminHome";
 import WalletHome from "../pages/wallet/WalletHome";
 import Login from "../pages/login/Login";
+import Transactions from "../pages/wallet/Transactions";
+import AccountBulkHome from "../pages/account/AccountBulkHome";
+import AccountHome from "../pages/account/AccountHome";
 
 export interface V6Route {
   path: string;
@@ -20,7 +23,7 @@ const navigation: V6Route[] = [
     isPrivate: false,
   },
   {
-    path: "/wallets",
+    path: "/dashboard",
     title: "Dashboard",
     element: <AdminHome />,
     isMenu: true,
@@ -34,28 +37,47 @@ const navigation: V6Route[] = [
     isPrivate: true,
   },
   {
-    path: "/wallets",
-    title: "Transactions",
-    element: <WalletHome />,
+    path: "/transactions",
+    title: "Bulk Transactions",
+    element: <Transactions />,
+    isMenu: true,
+    isPrivate: true,
+    children: [
+      {
+        path: "wallet",
+        title: "Wallet Transactions",
+        element: <WalletHome />,
+      },
+      {
+        path: "account",
+        title: "Account Transactions",
+        element: <AccountBulkHome />,
+      },
+    ],
+  },
+  {
+    path: "/accounts",
+    title: "Accounts",
+    element: <AccountHome />,
     isMenu: true,
     isPrivate: true,
   },
   {
-    path: "/wallets",
+    path: "/reports",
     title: "Reports",
     element: <WalletHome />,
     isMenu: true,
     isPrivate: true,
   },
   {
-    path: "/wallets",
+    path: "/approvals",
     title: "Approvals",
     element: <WalletHome />,
     isMenu: true,
     isPrivate: true,
   },
   {
-    path: "/wallets",
+    path: "/settings",
     title: "Settings",
     element: <WalletHome />,
     isMenu: true,
