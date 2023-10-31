@@ -39,7 +39,7 @@ const roles: string[] = [
 
 const userStatus: string[] = ["Active", "Inactive", "Not logged in"];
 
-function getRandomName(): { name: string; email: string } {
+export function getRandomName(): { name: string; email: string } {
   const randomFirstName =
     firstNames[Math.floor(Math.random() * firstNames.length)];
   const randomLastName =

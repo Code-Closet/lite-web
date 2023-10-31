@@ -54,3 +54,10 @@
   font-size: 24px;
   color: var(--primary-color);
 }
+
+.wallet-action-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}

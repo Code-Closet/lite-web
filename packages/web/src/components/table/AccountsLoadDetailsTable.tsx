@@ -45,23 +45,23 @@ const AccountsLoadDetailsTable: React.FC<{ account: AccountLoad }> = ({
       headerName: "Bulk Load Id",
     },
     {
-      field: "phoneNumber",
+      field: "account.phoneNumber",
       headerName: "Phone Number",
     },
     {
-      field: "accountName",
+      field: "account.accountName",
       headerName: "CBS Account Name",
     },
     {
-      field: "accountNumber",
+      field: "account.accountNumber",
       headerName: "CBS Account Number",
     },
     {
-      field: "accountType",
+      field: "account.accountType",
       headerName: "CBS Account Type",
     },
     {
-      field: "status",
+      field: "account.status",
       headerName: "Status",
     },
   ]);
