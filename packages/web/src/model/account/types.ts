@@ -8,9 +8,14 @@ export interface AccountLoad {
 export interface AccountLoadDetail {
   date: string;
   loadId: string;
+  account: Account;
+}
+
+export interface Account {
   accountNumber: string;
   accountName: string;
   accountType: string;
   phoneNumber: string;
-  status: "success" | "failed" | "pending";
+  walletNumber: string;
+  status: string;
 }
