@@ -1,6 +1,7 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components";
-import Select from "react-select";
+import Select, { SingleValue } from "react-select";
+import { Account } from "../../../model/account/types";
 
 const Input = styled.input`
   color: #818b94;
@@ -11,14 +12,39 @@ const Input = styled.input`
   padding-inline: 0.5rem;
 `;
 
-const AddAccountModal: React.FC = () => {
+const AddAccountModal: React.FC<{
+  account: Account;
+  setAccount: (account: Account) => void;
+}> = ({ account, setAccount }) => {
   const firstNameRef = useRef<HTMLInputElement>(null);
   const lastNameRef = useRef<HTMLInputElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
+  const accountNumberRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
+  const [selectedAccountType, setSelectedAccountType] = useState<{
+    value: string;
+    label: string;
+  }>();
 
   const onChangeInput = () => {
-    console.log("newUser");
+    const acc: Account = {
+      firstName: firstNameRef.current?.value || "",
+      lastName: lastNameRef.current?.value || "",
+      accountName: `${firstNameRef.current?.value || ""}.${
+        lastNameRef.current?.value || ""
+      }`,
+      accountNumber: accountNumberRef.current?.value || "",
+      phoneNumber: phoneRef.current?.value || "",
+      accountType: selectedAccountType?.value || "",
+      status: "Active",
+    };
+    setAccount(acc);
+  };
+
+  const handleRoleChange = (
+    accType: SingleValue<{ value: string; label: string }>
+  ): void => {
+    setSelectedAccountType(accType as { value: string; label: string });
+    setAccount({ ...account, accountType: accType?.value || "" });
   };
 
   return (
@@ -60,7 +86,7 @@ const AddAccountModal: React.FC = () => {
           <Input
             type="number"
             defaultValue=""
-            ref={emailRef}
+            ref={accountNumberRef}
             onChange={onChangeInput}
           />
         </div>
@@ -73,8 +99,8 @@ const AddAccountModal: React.FC = () => {
       </div>
 
       <div className="add-text-desc">
-        <span className="label">Role</span>
-        <span>Choose the role from the selection box.</span>
+        <span className="label">Account Type</span>
+        <span>Choose the account type from the selection box.</span>
       </div>
 
       <div className="add-input-row">
@@ -88,7 +114,7 @@ const AddAccountModal: React.FC = () => {
             { value: "current", label: "Current" },
             { value: "fd", label: "FD" },
           ]}
-          onChange={() => {}}
+          onChange={handleRoleChange}
         />
       </div>
     </div>

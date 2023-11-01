@@ -12,10 +12,12 @@ export interface AccountLoadDetail {
 }
 
 export interface Account {
+  firstName?: string;
+  lastName?: string;
   accountNumber: string;
   accountName: string;
   accountType: string;
   phoneNumber: string;
-  walletNumber: string;
+  walletNumber?: string;
   status: string;
 }
