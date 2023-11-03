@@ -1,4 +1,8 @@
-import { Account, AccountLoadDetail } from "../../model/account/types";
+import {
+  Account,
+  AccountLoadDetail,
+  AccountLoadPreview,
+} from "../../model/account/types";
 import { getRandomName } from "../admin/admin";
 
 export const getAccountLoadDetails = async (
@@ -9,6 +13,10 @@ export const getAccountLoadDetails = async (
 
 export const getAccounts = async (): Promise<Account[]> => {
   return Promise.resolve(generateAccounts(500));
+};
+
+export const accountLoadPreview = async (): Promise<AccountLoadPreview[]> => {
+  return Promise.resolve(generateAccountsPreview(10));
 };
 
 /*-----------------------------------------------------*/
@@ -73,6 +81,21 @@ const generateAccounts = (count: number): Account[] => {
       walletNumber: getRandomInt(100000, 999999).toString(),
       accountType: getRandomAccountType(),
       status: getRandomAccountStatus(),
+    });
+  }
+  return DUMMY_ACCOUNTS;
+};
+
+const generateAccountsPreview = (count: number): AccountLoadPreview[] => {
+  const DUMMY_ACCOUNTS: AccountLoadPreview[] = [];
+  while (DUMMY_ACCOUNTS.length < count) {
+    DUMMY_ACCOUNTS.push({
+      phoneNumber: getRandomInt(100000, 999999).toString(),
+      accountNumber: getRandomInt(100000, 999999).toString(),
+      accountName: getRandomName().name,
+      accountType: getRandomAccountType(),
+      isValid: false,
+      message: "Failed",
     });
   }
   return DUMMY_ACCOUNTS;
