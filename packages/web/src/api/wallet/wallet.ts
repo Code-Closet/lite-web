@@ -1,4 +1,8 @@
-import { WalletLoad, WalletLoadDetail } from "../../model/wallet/types";
+import {
+  WalletLoad,
+  WalletLoadDetail,
+  WalletLoadPreview,
+} from "../../model/wallet/types";
 //import axios from "../AxiosInstance";
 
 export const getWalletLoads = async (): Promise<WalletLoad[]> => {
@@ -13,6 +17,10 @@ export const getWalletLoadDetails = async (
   return Promise.resolve(generateBulkLoadDetail(loadId, 5));
 };
 
+export const getWalletLoadPreview = async (): Promise<WalletLoadPreview[]> => {
+  return Promise.resolve(generateWalletsPreview(10));
+};
+
 /*----------------------------------------------*/
 
 function getRandomInt(min: number, max: number): number {
@@ -22,7 +30,14 @@ function getRandomInt(min: number, max: number): number {
 }
 
 const walletStatus: string[] = ["success", "failed", "pending"];
+const valid: { isValid: boolean; message: string }[] = [
+  { isValid: true, message: "Success" },
+  { isValid: false, message: "Error" },
+];
 
+function generateValidationMessage(): { isValid: boolean; message: string } {
+  return valid[getRandomInt(0, 2)];
+}
 function getRandomStatus(): string {
   return walletStatus[getRandomInt(0, 3)];
 }
@@ -71,4 +86,21 @@ const generateBulkLoadDetail = (
     });
   }
   return DUMMY_WALLET_LOAD_DETAIL;
+};
+
+const generateWalletsPreview = (count: number): WalletLoadPreview[] => {
+  const DUMMY_WALLET_LOAD_PREVIEW: WalletLoadPreview[] = [];
+  while (DUMMY_WALLET_LOAD_PREVIEW.length < count) {
+    const valid = generateValidationMessage();
+    DUMMY_WALLET_LOAD_PREVIEW.push({
+      walletNumber: getRandomInt(100000, 999999).toString(),
+      phoneNumber: getRandomInt(100000, 999999).toString(),
+      accountNumber: getRandomInt(100000, 999999).toString(),
+      name: getRandomInt(100000, 999999).toString(),
+      amount: getRandomInt(100000, 999999),
+      isValid: valid.isValid,
+      message: valid.message,
+    });
+  }
+  return DUMMY_WALLET_LOAD_PREVIEW;
 };

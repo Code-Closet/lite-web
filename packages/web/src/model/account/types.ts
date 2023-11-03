@@ -21,3 +21,12 @@ export interface Account {
   walletNumber?: string;
   status: string;
 }
+
+export interface AccountLoadPreview {
+  accountNumber: string;
+  accountName: string;
+  accountType: string;
+  phoneNumber: string;
+  isValid: boolean;
+  message: string;
+}

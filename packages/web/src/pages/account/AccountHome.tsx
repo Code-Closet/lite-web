@@ -8,6 +8,7 @@ import AddAccountModal from "../../components/modal/account/AddAccountModal";
 import LoadWalletModal from "../../components/modal/account/LoadWalletModal";
 import DeactivateWalletModal from "../../components/modal/account/DeactivateWalletModal";
 import PixellpayToast from "../../components/toast/PixellpayToast";
+import FileUpload from "./FileUpload";
 const AccountHome: React.FC = () => {
   const [isSummaryView, setIsSummaryView] = useState<boolean>(true);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
@@ -22,6 +23,7 @@ const AccountHome: React.FC = () => {
     status: "",
     accountType: "",
   });
+  const [fileType, setFileType] = useState<string>("account");
 
   const onAddNewAccount = useCallback(() => {
     // api to modify user
@@ -102,6 +104,7 @@ const AccountHome: React.FC = () => {
           <button
             type="button"
             onClick={() => {
+              setFileType("account");
               setIsSummaryView(false);
             }}
           >
@@ -111,6 +114,7 @@ const AccountHome: React.FC = () => {
           <button
             type="button"
             onClick={() => {
+              setFileType("wallet");
               setIsSummaryView(false);
             }}
           >
@@ -125,7 +129,7 @@ const AccountHome: React.FC = () => {
           !isSummaryView ? "slide-right" : ""
         }`}
       >
-        <>File Upload</>
+        <FileUpload setIsSummaryView={setIsSummaryView} fileType={fileType} />
       </div>
     </div>
   );

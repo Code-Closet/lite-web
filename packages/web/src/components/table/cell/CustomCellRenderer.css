@@ -61,3 +61,21 @@
   align-items: center;
   margin-top: 10px;
 }
+
+.validation-cell {
+  color: var(--primary-text-color);
+  text-align: center;
+  margin-top: 6px;
+}
+
+.validation-cell .error {
+  color: red;
+  font-size: 22px;
+  margin-right: 10px;
+}
+
+.validation-cell .success {
+  color: green;
+  font-size: 22px;
+  margin-right: 10px;
+}

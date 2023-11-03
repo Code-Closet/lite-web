@@ -16,3 +16,13 @@ export interface WalletLoadDetail {
   amount: number;
   status: "success" | "failed" | "pending";
 }
+
+export interface WalletLoadPreview {
+  name: string;
+  phoneNumber: string;
+  accountNumber: string;
+  walletNumber: string;
+  amount: number;
+  isValid: boolean;
+  message: string;
+}

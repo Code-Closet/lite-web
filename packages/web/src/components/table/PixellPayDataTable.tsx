@@ -82,8 +82,8 @@ const PixellPayDataTable: React.FC = () => {
     {
       headerName: "Name",
       filter: "agTextColumnFilter",
-      valueGetter: (params) => {
-        return `${params.data?.name}~~${params.data?.email}`;
+      valueGetter: (params): string[] => {
+        return [params.data?.name as string, params.data?.email as string];
       },
       cellRenderer: NameRenderer,
       flex: 2,

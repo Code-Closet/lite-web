@@ -2,9 +2,8 @@ import { ICellRendererParams } from "ag-grid-community";
 import "./CustomCellRenderer.css";
 import { User } from "../../../api/admin/admin";
 
-const NameCellRenderer = (props: ICellRendererParams<User, string>) => {
-  const cellValue = props.valueFormatted ? props.valueFormatted : props.value;
-  const [name, email] = cellValue?.split("~~") || [];
+const NameCellRenderer = (props: ICellRendererParams<User, string[]>) => {
+  const [name, email] = props.value || [];
 
   return (
     <div className="name-field">
