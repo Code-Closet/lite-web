@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import PixellPayDataTable from "../../components/table/PixellPayDataTable";
+//import PixellPayDataTable from "../../components/table/PixellPayDataTable";
 import Modal, { ModalVariant } from "../../components/modal/Modal";
 import "./AdminHome.scss";
 import AddUserModal from "../../components/modal/admin/AddUserModal";
 import { User, getRoles } from "../../api/admin/admin";
 import { toast } from "react-toastify";
+//import Table from "../../components/table/pixellpay-table/Table";
+import AdminTable from "../../components/table/AdminTable";
 
 const AdminHome: React.FC = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -46,7 +48,7 @@ const AdminHome: React.FC = () => {
           <i className={`bx bx-user-plus`}></i>
           Add User
         </button>
-        <PixellPayDataTable />
+        <AdminTable />
       </div>
     </>
   );
