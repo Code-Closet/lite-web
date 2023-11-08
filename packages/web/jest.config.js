@@ -3,7 +3,7 @@ module.exports = {
   preset: "ts-jest",
   testEnvironment: "jsdom",
   transform: {
-    "^.+\\.tsx?$": [
+    "^.+\\.(tsx|jsx)?$": [
       "ts-jest",
       {
         tsconfig: "tsconfig.jest.json",
