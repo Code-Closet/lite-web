@@ -31,16 +31,18 @@ const AddUserModal: React.FC<AddUserModalProp> = ({ user, setUser, roles }) => {
     role: SingleValue<{ value: string; label: string }>
   ): void => {
     setSelectedRole(role as { value: string; label: string });
-    setUser({ ...user, role: role?.value || "" });
+    setUser({ ...user, userType: role?.value || "" });
   };
   const onChangeInput = () => {
     const newUser: User = {
-      name: `${firstNameRef.current?.value || ""}.${
-        lastNameRef.current?.value || ""
-      }`,
+      firstName: firstNameRef.current?.value || "",
+      lastName: lastNameRef.current?.value || "",
       email: emailRef.current?.value || "",
+      phoneNumber: phoneRef.current?.value || "",
       status: "Not logged in",
-      role: selectedRole.value,
+      userType: selectedRole.value,
+      fiancialEntityId: "",
+      username: phoneRef.current?.value || "",
     };
     setUser(newUser);
   };

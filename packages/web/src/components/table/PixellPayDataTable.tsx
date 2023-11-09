@@ -6,7 +6,12 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import "./style.scss";
 
-import { User, generateUsers, getRoles } from "../../api/admin/admin";
+import {
+  DummyUser,
+  User,
+  generateUsers,
+  getRoles,
+} from "../../api/admin/admin";
 import StatusRenderer from "./cell/StatusCellRenderer";
 import NameRenderer from "./cell/NameCellRenderer";
 import RoleRenderer from "./cell/RoleCellRenderer";
@@ -23,7 +28,7 @@ const PixellPayDataTable: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [modifiedUser, setModifiedUser] = useState<User | null>(null);
   const gridRef = useRef<AgGridReact<User>>(null);
-  const [rowData, setRowData] = useState<User[]>();
+  const [rowData, setRowData] = useState<DummyUser[]>();
   const [roles, setRoles] = useState<{ value: string; label: string }[]>([]);
 
   const defaultColDef = useMemo<ColDef>(() => {

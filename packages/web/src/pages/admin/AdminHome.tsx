@@ -11,10 +11,14 @@ import AdminTable from "../../components/table/AdminTable";
 const AdminHome: React.FC = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [newUser, setNewUser] = useState<User>({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
+    userType: "",
+    fiancialEntityId: "",
+    username: "",
     status: "",
-    role: "",
+    phoneNumber: "",
   });
   const [roles, setRoles] = useState<{ value: string; label: string }[]>([]);
 

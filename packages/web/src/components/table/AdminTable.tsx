@@ -1,5 +1,10 @@
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
-import { User, generateUsers, getRoles } from "../../api/admin/admin";
+import {
+  User,
+  UserResponse,
+  fetchAllUsers,
+  getRoles,
+} from "../../api/admin/admin";
 import PixellpayToast from "../toast/PixellpayToast";
 import Modal, { ModalVariant } from "../modal/Modal";
 import ModifyUserModal from "../modal/admin/ModifyUserModal";
@@ -12,11 +17,16 @@ const AdminTable: React.FC = () => {
   const [deleteUserModal, setDeleteUserModal] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [modifiedUser, setModifiedUser] = useState<User | null>(null);
-  const [rowData, setRowData] = useState<User[]>();
+  //const [rowData, setRowData] = useState<User[]>();
   const [roles, setRoles] = useState<{ value: string; label: string }[]>([]);
+  const [users, setUsers] = useState<UserResponse>();
 
   useEffect(() => {
-    setRowData(generateUsers(1000));
+    fetchAllUsers().then((users) => {
+      console.log(users);
+      setUsers(users);
+    });
+    //setRowData(generateUsers(1000));
     initRoles();
   }, []);
 
@@ -46,7 +56,13 @@ const AdminTable: React.FC = () => {
     const adminColumns = [
       {
         Header: "Name",
-        accessor: "name",
+        accessor: (row: User) => {
+          return `${row.firstName} ${row.lastName}`;
+        },
+      },
+      {
+        Header: "Username",
+        accessor: "username",
       },
       {
         Header: "Status",
@@ -55,7 +71,7 @@ const AdminTable: React.FC = () => {
       },
       {
         Header: "Role",
-        accessor: "role",
+        accessor: "userType",
       },
       {
         Header: "Action",
@@ -123,8 +139,8 @@ const AdminTable: React.FC = () => {
           <DeleteUserModal user={selectedUser} />
         </Modal>
       )}
-      {!!columns && !!rowData && (
-        <PaginationTable columns={columns} data={rowData} />
+      {!!columns && !!users && (
+        <PaginationTable columns={columns} data={users.content} />
       )}
     </Fragment>
   );
