@@ -10,7 +10,7 @@ const DeleteUserModal: React.FC<{ user: User }> = ({ user }) => {
         <div className="name-field">
           <div>
             <span style={{ color: "rgb(0,48,51)", letterSpacing: "0.5px" }}>
-              {user.name}
+              {`${user.firstName} ${user.lastName}`}
             </span>
           </div>
           <div className="email">

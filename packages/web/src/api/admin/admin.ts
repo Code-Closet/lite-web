@@ -1,3 +1,5 @@
+import axiosInstance from "../AxiosInstance";
+
 function getRandomInt(min: number, max: number): number {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -58,16 +60,54 @@ function getRandomStatus(): string {
   return userStatus[getRandomInt(0, 3)];
 }
 
-export interface User {
+export interface DummyUser {
   name: string;
   email: string;
   role: string;
   status: string;
 }
 
-const DUMMY_USERS: User[] = [];
+export interface User {
+  updateUser?: string | null;
+  fiancialEntityId: string;
+  id?: string | null;
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  userType: string;
+  status: string;
+}
 
-export const generateUsers = (count: number): User[] => {
+export type JSONObject<T = any> = { [key: string]: T };
+
+export interface UserResponse {
+  pageable: JSONObject;
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+  size: number;
+  number: number;
+  sort: JSONObject;
+  numberOfElements: number;
+  first: boolean;
+  empty: boolean;
+  content: User[];
+}
+
+export const fetchAllUsers = (): Promise<UserResponse> => {
+  return axiosInstance
+    .get("/api/v1/1001/users?page=0&size=10&sort=id&sort=username")
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error;
+    });
+};
+
+const DUMMY_USERS: DummyUser[] = [];
+
+export const generateUsers = (count: number): DummyUser[] => {
   while (DUMMY_USERS.length < count) {
     const { name, email } = getRandomName();
     DUMMY_USERS.push({
