@@ -7,7 +7,7 @@
 }
 .global-search {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
   height: 3rem;
   margin-inline-end: 6rem;
@@ -60,7 +60,7 @@ tfoot td {
   border-end-end-radius: 10px;
   border-end-start-radius: 10px;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
   padding-inline-end: 5rem;
   gap: 1rem;
