@@ -4,6 +4,7 @@
   margin-top: 1rem;
   margin-inline: 1rem;
   height: calc(100% - 3rem);
+  width: calc(100% - 5rem);
 }
 .global-search {
   display: flex;
@@ -72,6 +73,14 @@ tfoot td {
   background: transparent;
   font-size: 24px;
   font-weight: 600;
+}
+
+.pagination .page-count-select {
+  width: 6rem;
+  border: 1px solid var(--body-color);
+  color: var(--secondary-text-color);
+  font-size: 16px;
+  font-weight: 400;
 }
 
 .action-field {

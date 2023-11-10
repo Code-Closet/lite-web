@@ -6,7 +6,7 @@ import {
 //import axios from "../AxiosInstance";
 
 export const getWalletLoads = async (): Promise<WalletLoad[]> => {
-  return Promise.resolve(generateBulkLoad(10));
+  return Promise.resolve(generateBulkLoad(100));
   //   const response = await axios.get("api/wallet/load");
   //   return response.data;
 };

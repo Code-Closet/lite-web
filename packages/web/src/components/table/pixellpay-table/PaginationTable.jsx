@@ -70,21 +70,9 @@ const PaginationTable = ({ columns, data }) => {
             {pageIndex + 1} of {pageOptions.length}
           </strong>{" "}
         </span>
-        <span>
-          | Go to page:{" "}
-          <input
-            type="number"
-            defaultValue={pageIndex + 1}
-            onChange={(e) => {
-              const pageNumber = e.target.value
-                ? Number(e.target.value) - 1
-                : 0;
-              gotoPage(pageNumber);
-            }}
-            style={{ width: "50px" }}
-          />
-        </span>
+
         <select
+          className="page-count-select"
           value={pageSize}
           onChange={(e) => setPageSize(Number(e.target.value))}
         >

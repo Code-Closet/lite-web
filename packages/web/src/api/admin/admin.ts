@@ -68,7 +68,6 @@ export interface DummyUser {
 }
 
 export interface User {
-  updateUser?: string | null;
   fiancialEntityId: string;
   id?: string | null;
   username: string;
@@ -78,6 +77,10 @@ export interface User {
   phoneNumber: string;
   userType: string;
   status: string;
+  insertTimestamp?: string | null;
+  insertUser?: string | null;
+  updateTimestamp?: string | null;
+  updateUser?: string | null;
 }
 
 export type JSONObject<T = any> = { [key: string]: T };
@@ -96,9 +99,33 @@ export interface UserResponse {
   content: User[];
 }
 
-export const fetchAllUsers = (): Promise<UserResponse> => {
+export const fetchAllUsers = (
+  fiancialEntityId: string
+): Promise<UserResponse> => {
   return axiosInstance
-    .get("/api/v1/1001/users?page=0&size=10&sort=id&sort=username")
+    .get(
+      `/api/v1/${fiancialEntityId}/users?page=0&size=10&sort=id&sort=username`
+    )
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error;
+    });
+};
+
+export const addUser = (newUser: User): Promise<any> => {
+  return axiosInstance
+    .post(`/api/v1/${newUser.fiancialEntityId}/users`, { data: newUser })
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error;
+    });
+};
+
+export const updateUser = (updatedUser: User): Promise<any> => {
+  return axiosInstance
+    .put(`/api/v1/${updatedUser.fiancialEntityId}/users/${updatedUser.id}`, {
+      data: updatedUser,
+    })
     .then((response) => response.data)
     .catch((error) => {
       throw error;

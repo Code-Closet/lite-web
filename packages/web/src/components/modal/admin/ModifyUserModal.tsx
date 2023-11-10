@@ -6,9 +6,9 @@ import { useRef, useState } from "react";
 
 interface ModifyUserModalProps {
   user: User;
-  modifiedUser: User;
+  modifiedUser: User | undefined;
   roles: { value: string; label: string }[];
-  setModifiedUser: (user: User) => void;
+  setModifiedUser: (user: User) => any;
 }
 const Input = styled.input`
   color: #818b94;
@@ -24,6 +24,8 @@ const ModifyUserModal: React.FC<ModifyUserModalProps> = ({
   roles,
   setModifiedUser,
 }) => {
+  const firstNameRef = useRef<HTMLInputElement>(null);
+  const lastNameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
   const [selectedRole, setSelectedRole] = useState<{
@@ -34,13 +36,19 @@ const ModifyUserModal: React.FC<ModifyUserModalProps> = ({
     role: SingleValue<{ value: string; label: string }>
   ): void => {
     setSelectedRole(role as { value: string; label: string });
-    setModifiedUser({ ...modifiedUser, userType: role?.value || "" });
+    setModifiedUser({ ...modifiedUser, userType: role?.value || "" } as User);
   };
-  const handleEmailChange = () => {
-    setModifiedUser({ ...modifiedUser, email: emailRef.current!.value });
-  };
-  const handleNumberChange = () => {
-    setModifiedUser({ ...modifiedUser, email: phoneRef.current!.value });
+
+  const onChangeInput = () => {
+    const newUser: User = {
+      ...user,
+      firstName: firstNameRef.current?.value || "",
+      lastName: lastNameRef.current?.value || "",
+      email: emailRef.current?.value || "",
+      phoneNumber: phoneRef.current?.value || "",
+      username: phoneRef.current?.value || "",
+    };
+    setModifiedUser(newUser);
   };
   return (
     <div className="modify-user-container">
@@ -51,11 +59,21 @@ const ModifyUserModal: React.FC<ModifyUserModalProps> = ({
       <div className="modfiy-input-row">
         <div className="modify-input-field">
           <span>First Name</span>
-          <Input type="text" defaultValue={user.firstName} />
+          <Input
+            type="text"
+            defaultValue={user.firstName}
+            ref={firstNameRef}
+            onChange={onChangeInput}
+          />
         </div>
         <div className="modify-input-field">
           <span>Last Name</span>
-          <Input type="text" defaultValue={user.lastName} />
+          <Input
+            type="text"
+            defaultValue={user.lastName}
+            ref={lastNameRef}
+            onChange={onChangeInput}
+          />
         </div>
       </div>
 
@@ -66,7 +84,7 @@ const ModifyUserModal: React.FC<ModifyUserModalProps> = ({
             type="text"
             defaultValue={user.email}
             ref={emailRef}
-            onChange={handleEmailChange}
+            onChange={onChangeInput}
           />
         </div>
 
@@ -76,7 +94,7 @@ const ModifyUserModal: React.FC<ModifyUserModalProps> = ({
             type="text"
             defaultValue={user.phoneNumber}
             ref={phoneRef}
-            onChange={handleNumberChange}
+            onChange={onChangeInput}
           />
         </div>
       </div>

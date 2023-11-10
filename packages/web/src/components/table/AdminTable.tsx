@@ -4,6 +4,7 @@ import {
   UserResponse,
   fetchAllUsers,
   getRoles,
+  updateUser,
 } from "../../api/admin/admin";
 import PixellpayToast from "../toast/PixellpayToast";
 import Modal, { ModalVariant } from "../modal/Modal";
@@ -16,13 +17,13 @@ const AdminTable: React.FC = () => {
   const [modifyUserModal, setModifyUserModal] = useState<boolean>(false);
   const [deleteUserModal, setDeleteUserModal] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [modifiedUser, setModifiedUser] = useState<User | null>(null);
+  const [modifiedUser, setModifiedUser] = useState<User>({} as User);
   //const [rowData, setRowData] = useState<User[]>();
   const [roles, setRoles] = useState<{ value: string; label: string }[]>([]);
   const [users, setUsers] = useState<UserResponse>();
 
   useEffect(() => {
-    fetchAllUsers().then((users) => {
+    fetchAllUsers("1001").then((users) => {
       console.log(users);
       setUsers(users);
     });
@@ -45,11 +46,14 @@ const AdminTable: React.FC = () => {
   }, [selectedUser]);
 
   const onModifyUserConfirm = useCallback(() => {
+    modifiedUser.updateTimestamp = formatDateToCustomString(new Date());
     console.log("modify user", modifiedUser);
+    updateUser(modifiedUser).then(() => {
+      setModifyUserModal(false);
+      setSelectedUser(null);
+      toast.success("User modified successfully");
+    });
     // api to modify user
-    setModifyUserModal(false);
-    setSelectedUser(null);
-    toast.success("User modified successfully");
   }, [selectedUser, modifiedUser]);
 
   const columns = useMemo(() => {
@@ -110,6 +114,18 @@ const AdminTable: React.FC = () => {
     return adminColumns;
   }, []);
 
+  const formatDateToCustomString = (date: Date) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based
+    const day = date.getDate().toString().padStart(2, "0");
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const seconds = date.getSeconds().toString().padStart(2, "0");
+    const milliseconds = date.getMilliseconds().toString().padStart(3, "0");
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
+  };
+
   return (
     <Fragment>
       <PixellpayToast />
@@ -124,7 +140,7 @@ const AdminTable: React.FC = () => {
           <ModifyUserModal
             user={selectedUser}
             roles={roles}
-            modifiedUser={selectedUser}
+            modifiedUser={modifiedUser}
             setModifiedUser={setModifiedUser}
           />
         </Modal>

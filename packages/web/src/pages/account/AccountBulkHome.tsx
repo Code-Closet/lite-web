@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Accounts.scss";
-import AccountsBulkLoadTable from "../../components/table/AccountsBulkLoadTable";
+//import AccountsBulkLoadTable from "../../components/table/AccountsBulkLoadTable";
 import { AccountLoad } from "../../model/account/types";
 import AccountsLoadDetailsTable from "../../components/table/AccountsLoadDetailsTable";
+import AccountsBulkLoadTable1 from "../../components/table/AccountBulkLoadTable1";
 
 const AccountBulkHome: React.FC = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const AccountBulkHome: React.FC = () => {
         </button>
       </div>
       <div className={`account-summary ${!isSummaryView ? "slide-left" : ""}`}>
-        <AccountsBulkLoadTable
+        <AccountsBulkLoadTable1
           setIsSummaryView={setIsSummaryView}
           setSelectedBatch={setSelectedBatch}
         />
