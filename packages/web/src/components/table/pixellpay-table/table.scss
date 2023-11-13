@@ -27,6 +27,9 @@
   overflow: overlay;
   border-top-left-radius: 10px;
 }
+.table-no-pagination {
+  max-height: 100%;
+}
 table {
   border-collapse: collapse;
   width: 100%;
@@ -91,11 +94,36 @@ tfoot td {
   margin-inline: 2rem;
 }
 
+.wallet-cell-action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .action-field .action-button,
 .wallet-detail-action-button {
   display: flex;
   color: rgb(129, 143, 154);
-  margin-inline: 2rem;
+  margin-inline: 1rem;
   gap: 5px;
   cursor: pointer;
+  font-size: 22px;
+}
+
+.validation-cell {
+  color: var(--primary-text-color);
+  text-align: center;
+  margin-top: 6px;
+}
+
+.validation-cell .error {
+  color: red;
+  font-size: 22px;
+  margin-right: 10px;
+}
+
+.validation-cell .success {
+  color: green;
+  font-size: 22px;
+  margin-right: 10px;
 }

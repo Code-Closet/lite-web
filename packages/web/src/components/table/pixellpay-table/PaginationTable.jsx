@@ -2,7 +2,7 @@ import { usePagination, useTable, useGlobalFilter } from "react-table";
 import "./table.scss";
 import GlobalFilter from "./GlobalFilter";
 
-const PaginationTable = ({ columns, data }) => {
+const PaginationTable = ({ columns, data, hideGlobalfilter = false }) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -32,7 +32,9 @@ const PaginationTable = ({ columns, data }) => {
   const { pageIndex, pageSize, globalFilter } = state;
   return (
     <div className="table-container">
-      <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
+      {!hideGlobalfilter && (
+        <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
+      )}
       <div className="table-box">
         <table {...getTableProps}>
           <thead>
