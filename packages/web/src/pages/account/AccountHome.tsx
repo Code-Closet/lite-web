@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { toast } from "react-toastify";
-import AccountSummaryTable from "../../components/table/AccountSummaryTable";
+//import AccountSummaryTable from "../../components/table/AccountSummaryTable";
 import Modal, { ModalVariant } from "../../components/modal/Modal";
 import "./Accounts.scss";
 import { Account } from "../../model/account/types";
@@ -9,6 +9,7 @@ import LoadWalletModal from "../../components/modal/account/LoadWalletModal";
 import DeactivateWalletModal from "../../components/modal/account/DeactivateWalletModal";
 import PixellpayToast from "../../components/toast/PixellpayToast";
 import FileUpload from "./FileUpload";
+import AccountSummaryTable1 from "../../components/table/AccountSummaryTable1";
 const AccountHome: React.FC = () => {
   const [isSummaryView, setIsSummaryView] = useState<boolean>(true);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
@@ -89,7 +90,7 @@ const AccountHome: React.FC = () => {
         </div>
 
         <div className="account-summary-table">
-          <AccountSummaryTable
+          <AccountSummaryTable1
             handleLoadWallet={() => setOpenLoadWalletModal(true)}
             handleDeactivateWallet={() => setDeactivateModal(true)}
             setSelectedAccount={setSelectedAccount}

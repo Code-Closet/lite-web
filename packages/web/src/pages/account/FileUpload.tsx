@@ -1,11 +1,13 @@
 import { useState } from "react";
 import PixellpayToast from "../../components/toast/PixellpayToast";
-import AccountLoadPreviewTable from "../../components/table/AccountLoadPreviewTable";
+//import AccountLoadPreviewTable from "../../components/table/AccountLoadPreviewTable";
 import { AccountLoadPreview } from "../../model/account/types";
 import { accountLoadPreview } from "../../api/account/account";
 import { WalletLoadPreview } from "../../model/wallet/types";
 import { getWalletLoadPreview } from "../../api/wallet/wallet";
-import WalletLoadPreviewTable from "../../components/table/WalletLoadPreviewTable";
+//import WalletLoadPreviewTable from "../../components/table/WalletLoadPreviewTable";
+import AccountLoadPreviewTable1 from "../../components/table/AccountLoadPreviewTable1";
+import WalletLoadPreviewTable1 from "../../components/table/WalletLoadPreviewTable1";
 
 interface FileUploadProps {
   setIsSummaryView: (isSummaryView: boolean) => void;
@@ -57,10 +59,14 @@ const FileUpload: React.FC<FileUploadProps> = ({ ...props }) => {
       </div>
       <div className="file-upload-section">
         <div className="file-upload-desc">
-          <input type="text" placeholder="File Description" />
+          <input
+            type="text"
+            placeholder="File Description"
+            className="file-input"
+          />
         </div>
         <div className="file-upload">
-          <input type="file" className="custom-file-input" />
+          <input type="file" className="file-input custom-file-input" />
           <button type="button" onClick={handleUpload}>
             <i className="bx bx-upload"></i>
             Upload
@@ -68,12 +74,12 @@ const FileUpload: React.FC<FileUploadProps> = ({ ...props }) => {
         </div>
         {accountUploadPreview && (
           <div className="account-upload-preview">
-            <AccountLoadPreviewTable previewRowData={accountPreviewData} />
+            <AccountLoadPreviewTable1 previewRowData={accountPreviewData} />
           </div>
         )}
         {wallettUploadPreview && (
           <div className="wallet-upload-preview">
-            <WalletLoadPreviewTable previewRowData={walletPreviewData} />
+            <WalletLoadPreviewTable1 previewRowData={walletPreviewData} />
           </div>
         )}
         {(accountUploadPreview || wallettUploadPreview) && (

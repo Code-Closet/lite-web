@@ -43,7 +43,7 @@ const AddUserModal: React.FC<AddUserModalProp> = ({ user, setUser, roles }) => {
       userType: selectedRole.value,
       fiancialEntityId: "",
       username: phoneRef.current?.value || "",
-    };
+    };  
     setUser(newUser);
   };
 
