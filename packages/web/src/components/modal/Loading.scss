@@ -1,0 +1,12 @@
+.loader-container {
+  height: 85vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  width: calc(100% - 2rem);
+  z-index: 100;
+  background: var(--nav-color);
+  opacity: 75%;
+  margin: 1.5rem;
+}

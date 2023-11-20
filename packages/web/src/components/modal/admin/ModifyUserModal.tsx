@@ -1,8 +1,8 @@
-import { User } from "../../../api/admin/admin";
 import styled from "styled-components";
 import Select, { SingleValue } from "react-select";
 import "./ModifyUserModal.scss";
 import { useRef, useState } from "react";
+import { User } from "../../../model/user/types";
 
 interface ModifyUserModalProps {
   user: User;
@@ -36,7 +36,9 @@ const ModifyUserModal: React.FC<ModifyUserModalProps> = ({
     role: SingleValue<{ value: string; label: string }>
   ): void => {
     setSelectedRole(role as { value: string; label: string });
-    setModifiedUser({ ...modifiedUser, userType: role?.value || "" } as User);
+    if (modifiedUser?.firstName) {
+      setModifiedUser({ ...modifiedUser, userType: role?.value || "" } as User);
+    } else setModifiedUser({ ...user, userType: role?.value || "" } as User);
   };
 
   const onChangeInput = () => {

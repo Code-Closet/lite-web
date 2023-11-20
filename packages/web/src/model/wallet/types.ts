@@ -1,3 +1,5 @@
+import { Model, Page } from "../common-types";
+
 export interface WalletLoad {
   batchId: string;
   date: string;
@@ -25,4 +27,18 @@ export interface WalletLoadPreview {
   amount: number;
   isValid: boolean;
   message: string;
+}
+
+/************************************************ */
+export interface WalletLoad extends Page {
+  content: Wallet[];
+}
+export interface Wallet extends Model {
+  extAccountId: string;
+  walletId: string;
+  extWalletId: string;
+  creditAmount: string;
+  fileDetail: string;
+  batchId: string;
+  loadType: string;
 }

@@ -1,16 +1,19 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-//import AccountSummaryTable from "../../components/table/AccountSummaryTable";
 import Modal, { ModalVariant } from "../../components/modal/Modal";
 import "./Accounts.scss";
-import { Account } from "../../model/account/types";
+import { Account, Account1 } from "../../model/account/types";
 import AddAccountModal from "../../components/modal/account/AddAccountModal";
 import LoadWalletModal from "../../components/modal/account/LoadWalletModal";
 import DeactivateWalletModal from "../../components/modal/account/DeactivateWalletModal";
 import PixellpayToast from "../../components/toast/PixellpayToast";
 import FileUpload from "./FileUpload";
-import AccountSummaryTable1 from "../../components/table/AccountSummaryTable1";
+import AccountSummaryTable from "../../components/table/AccountSummaryTable";
+import { AuthData } from "../../auth/AuthGuard";
+import { getAccounts } from "../../api/account/account";
+import Loading from "../../components/modal/Loading";
 const AccountHome: React.FC = () => {
+  const { user } = AuthData();
   const [isSummaryView, setIsSummaryView] = useState<boolean>(true);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [openLoadWalletModal, setOpenLoadWalletModal] =
@@ -25,6 +28,8 @@ const AccountHome: React.FC = () => {
     accountType: "",
   });
   const [fileType, setFileType] = useState<string>("account");
+  const [accountData, setAccountData] = useState<Account1[]>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const onAddNewAccount = useCallback(() => {
     // api to modify user
@@ -38,6 +43,19 @@ const AccountHome: React.FC = () => {
     setOpenLoadWalletModal(false);
     toast.success("Wallet loaded successfully");
   }, [selectedAccount]);
+
+  useEffect(() => {
+    setLoading(true);
+    getAccounts(user.financialEntityId)
+      .then((data) => {
+        setAccountData(data.content);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+        toast.error(`Failed to get accounts ${error}`);
+      });
+  }, []);
 
   return (
     <div className="account-container">
@@ -88,12 +106,13 @@ const AccountHome: React.FC = () => {
             <i className="bx bx-search">Search</i>
           </button>
         </div>
-
+        {loading && <Loading />}
         <div className="account-summary-table">
-          <AccountSummaryTable1
+          <AccountSummaryTable
             handleLoadWallet={() => setOpenLoadWalletModal(true)}
             handleDeactivateWallet={() => setDeactivateModal(true)}
             setSelectedAccount={setSelectedAccount}
+            accountData={accountData ?? []}
           />
         </div>
 

@@ -1,6 +1,6 @@
 import { Fragment } from "react";
-import { User } from "../../../api/admin/admin";
 import "./DeleteUserModal.scss";
+import { User } from "../../../model/user/types";
 
 const DeleteUserModal: React.FC<{ user: User }> = ({ user }) => {
   return (

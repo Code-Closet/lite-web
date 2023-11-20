@@ -1,7 +1,6 @@
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import {
-  User,
-  UserResponse,
+  deleteUser,
   fetchAllUsers,
   getRoles,
   updateUser,
@@ -12,22 +11,26 @@ import ModifyUserModal from "../modal/admin/ModifyUserModal";
 import { toast } from "react-toastify";
 import DeleteUserModal from "../modal/admin/DeleteUserModal";
 import PaginationTable from "./pixellpay-table/PaginationTable";
+import { AuthData } from "../../auth/AuthGuard";
+import { User, UserResponse } from "../../model/user/types";
+import Loading from "../modal/Loading";
 
 const AdminTable: React.FC = () => {
   const [modifyUserModal, setModifyUserModal] = useState<boolean>(false);
   const [deleteUserModal, setDeleteUserModal] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [modifiedUser, setModifiedUser] = useState<User>({} as User);
-  //const [rowData, setRowData] = useState<User[]>();
   const [roles, setRoles] = useState<{ value: string; label: string }[]>([]);
   const [users, setUsers] = useState<UserResponse>();
+  const [loading, setLoading] = useState<boolean>(false);
 
+  const { user: loggedInUser } = AuthData();
   useEffect(() => {
-    fetchAllUsers("1001").then((users) => {
-      console.log(users);
+    setLoading(true);
+    fetchAllUsers(loggedInUser.financialEntityId).then((users) => {
       setUsers(users);
+      setLoading(false);
     });
-    //setRowData(generateUsers(1000));
     initRoles();
   }, []);
 
@@ -39,20 +42,36 @@ const AdminTable: React.FC = () => {
 
   const onDeleteUserConfirm = useCallback(() => {
     console.log("delete user", selectedUser);
-    // api to delete user
-    setDeleteUserModal(false);
-    setSelectedUser(null);
-    toast.success("User deleted successfully");
+    deleteUser(
+      loggedInUser.financialEntityId.toString(),
+      selectedUser ?? ({} as User)
+    )
+      .then(() => {
+        setDeleteUserModal(false);
+        setSelectedUser(null);
+        toast.success("User deleted successfully");
+      })
+      .catch((error) => {
+        setDeleteUserModal(false);
+        setSelectedUser(null);
+        toast.error(`User deletion failed : ${error}`);
+      });
   }, [selectedUser]);
 
   const onModifyUserConfirm = useCallback(() => {
     modifiedUser.updateTimestamp = formatDateToCustomString(new Date());
     console.log("modify user", modifiedUser);
-    updateUser(modifiedUser).then(() => {
-      setModifyUserModal(false);
-      setSelectedUser(null);
-      toast.success("User modified successfully");
-    });
+    updateUser(loggedInUser.financialEntityId.toString(), modifiedUser)
+      .then(() => {
+        setModifyUserModal(false);
+        setSelectedUser(null);
+        toast.success("User modified successfully");
+      })
+      .catch((error) => {
+        setModifyUserModal(false);
+        setSelectedUser(null);
+        toast.error(`User modification failed : ${error}`);
+      });
     // api to modify user
   }, [selectedUser, modifiedUser]);
 
@@ -98,7 +117,10 @@ const AdminTable: React.FC = () => {
                 </div>
                 <div
                   className="action-button"
-                  onClick={() => setDeleteUserModal(true)}
+                  onClick={() => {
+                    setDeleteUserModal(true);
+                    setSelectedUser(params.row.original);
+                  }}
                 >
                   <img src="./assets/admin/delete.svg" alt="delete" />
                   <label htmlFor="modify" style={{ cursor: "pointer" }}>
@@ -155,6 +177,7 @@ const AdminTable: React.FC = () => {
           <DeleteUserModal user={selectedUser} />
         </Modal>
       )}
+      {loading && <Loading />}
       {!!columns && !!users && (
         <PaginationTable columns={columns} data={users.content} />
       )}

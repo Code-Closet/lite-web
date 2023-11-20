@@ -1,21 +1,28 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { AccountLoad } from "../../model/account/types";
 import PaginationTable from "./pixellpay-table/PaginationTable";
-import { getWalletLoads } from "../../api/wallet/wallet";
+import { accountBulkLoad } from "../../api/account/account";
+import { AuthData } from "../../auth/AuthGuard";
+import { Batch } from "../../model/common-types";
+import Loading from "../modal/Loading";
 
-const AccountsBulkLoadTable1: React.FC<{
+const AccountsBulkLoadTable: React.FC<{
   setIsSummaryView: (view: boolean) => void;
-  setSelectedBatch: (batch: AccountLoad) => void;
+  setSelectedBatch: (batch: Batch) => void;
 }> = ({ setIsSummaryView, setSelectedBatch }) => {
-  const [rowData, setRowData] = useState<AccountLoad[]>();
-  const onClick = useCallback((accountLoad: AccountLoad) => {
+  const [rowData, setRowData] = useState<Batch[]>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const onClick = useCallback((accountLoad: Batch) => {
     setIsSummaryView(false);
     setSelectedBatch(accountLoad);
   }, []);
 
+  const { user } = AuthData();
+
   useEffect(() => {
-    getWalletLoads().then((data) => {
-      setRowData(data);
+    setLoading(true);
+    accountBulkLoad(user.financialEntityId).then((data) => {
+      setRowData(data.content);
+      setLoading(false);
     });
   }, []);
 
@@ -23,11 +30,11 @@ const AccountsBulkLoadTable1: React.FC<{
     const accBulkLoadColumns = [
       {
         Header: "Batch Id",
-        accessor: "batchId",
+        accessor: "id",
       },
       {
         Header: "Date",
-        accessor: "date",
+        accessor: "insertTimestamp",
       },
       {
         accessor: "totalSuccess",
@@ -58,6 +65,7 @@ const AccountsBulkLoadTable1: React.FC<{
 
   return (
     <>
+      {loading && <Loading />}
       {!!columns && !!rowData && (
         <PaginationTable columns={columns} data={rowData} />
       )}
@@ -65,4 +73,4 @@ const AccountsBulkLoadTable1: React.FC<{
   );
 };
 
-export default AccountsBulkLoadTable1;
+export default AccountsBulkLoadTable;

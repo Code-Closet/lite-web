@@ -1,13 +1,11 @@
 import { useState } from "react";
 import PixellpayToast from "../../components/toast/PixellpayToast";
-//import AccountLoadPreviewTable from "../../components/table/AccountLoadPreviewTable";
 import { AccountLoadPreview } from "../../model/account/types";
 import { accountLoadPreview } from "../../api/account/account";
 import { WalletLoadPreview } from "../../model/wallet/types";
 import { getWalletLoadPreview } from "../../api/wallet/wallet";
-//import WalletLoadPreviewTable from "../../components/table/WalletLoadPreviewTable";
-import AccountLoadPreviewTable1 from "../../components/table/AccountLoadPreviewTable1";
-import WalletLoadPreviewTable1 from "../../components/table/WalletLoadPreviewTable1";
+import AccountLoadPreviewTable from "../../components/table/AccountLoadPreviewTable";
+import WalletLoadPreviewTable from "../../components/table/WalletLoadPreviewTable";
 
 interface FileUploadProps {
   setIsSummaryView: (isSummaryView: boolean) => void;
@@ -74,12 +72,12 @@ const FileUpload: React.FC<FileUploadProps> = ({ ...props }) => {
         </div>
         {accountUploadPreview && (
           <div className="account-upload-preview">
-            <AccountLoadPreviewTable1 previewRowData={accountPreviewData} />
+            <AccountLoadPreviewTable previewRowData={accountPreviewData} />
           </div>
         )}
         {wallettUploadPreview && (
           <div className="wallet-upload-preview">
-            <WalletLoadPreviewTable1 previewRowData={walletPreviewData} />
+            <WalletLoadPreviewTable previewRowData={walletPreviewData} />
           </div>
         )}
         {(accountUploadPreview || wallettUploadPreview) && (
