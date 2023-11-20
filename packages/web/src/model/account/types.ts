@@ -1,3 +1,5 @@
+import { Batch, Model, Page } from "../common-types";
+
 export interface AccountLoad {
   batchId: string;
   date: string;
@@ -29,4 +31,25 @@ export interface AccountLoadPreview {
   phoneNumber: string;
   isValid: boolean;
   message: string;
+}
+/************************************************ */
+
+export interface Account1 extends Model {
+  extAccountId: string;
+  customerId: string;
+  branchId: string;
+  accountName: string;
+  accountType: string;
+  phoneNumber: string;
+  batchId: string;
+}
+
+export interface AccountBatchDetail {
+  batch: Batch;
+  accounts: Account1[];
+  status: string;
+}
+
+export interface AccountList extends Page {
+  content: Account1[];
 }

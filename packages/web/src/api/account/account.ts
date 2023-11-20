@@ -1,22 +1,42 @@
 import {
-  Account,
-  AccountLoadDetail,
+  AccountBatchDetail,
+  AccountList,
   AccountLoadPreview,
 } from "../../model/account/types";
+import { BatchLoad } from "../../model/common-types";
+import axiosInstance from "../AxiosInstance";
 import { getRandomName } from "../admin/admin";
 
 export const getAccountLoadDetails = async (
-  loadId: string
-): Promise<AccountLoadDetail[]> => {
-  return Promise.resolve(generateBulkLoadDetail(loadId, 5));
+  loadId: string,
+  financialEntityId: number
+): Promise<AccountBatchDetail> => {
+  return axiosInstance
+    .get(`/api/v1/${financialEntityId}/account/batch/${loadId}`)
+    .then((response) => response.data);
 };
 
-export const getAccounts = async (): Promise<Account[]> => {
-  return Promise.resolve(generateAccounts(500));
+export const getAccounts = async (
+  financialEntityId: number
+): Promise<AccountList> => {
+  return axiosInstance
+    .get(`/api/v1/${financialEntityId}/account?page=0&size=100&sort=id`)
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error;
+    });
 };
 
 export const accountLoadPreview = async (): Promise<AccountLoadPreview[]> => {
   return Promise.resolve(generateAccountsPreview(10));
+};
+
+export const accountBulkLoad = async (
+  financialEntityId: number
+): Promise<BatchLoad> => {
+  return axiosInstance
+    .get(`/api/v1/${financialEntityId}/account/batch?page=0&size=10&sort=id`)
+    .then((response) => response.data);
 };
 
 /*-----------------------------------------------------*/
@@ -27,64 +47,11 @@ function getRandomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-const uploadStatus: string[] = ["Success", "Failed", "Pending"];
 const accountType: string[] = ["Savings", "Current", "FD"];
-const accountStatus: string[] = ["Active", "Inactive"];
-
-function getRandomStatus(): string {
-  return uploadStatus[getRandomInt(0, 3)];
-}
 
 function getRandomAccountType(): string {
   return accountType[getRandomInt(0, 3)];
 }
-
-function getRandomAccountStatus(): string {
-  return accountStatus[getRandomInt(0, 2)];
-}
-
-const generateBulkLoadDetail = (
-  loadId: string,
-  count: number
-): AccountLoadDetail[] => {
-  const DUMMY_ACCOUNT_LOAD_DETAIL: AccountLoadDetail[] = [];
-  while (DUMMY_ACCOUNT_LOAD_DETAIL.length < count) {
-    DUMMY_ACCOUNT_LOAD_DETAIL.push({
-      date: new Date()
-        .toLocaleDateString("en-GB", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        })
-        .replace(/\//g, "-"),
-      loadId: loadId,
-      account: {
-        phoneNumber: getRandomInt(100000, 999999).toString(),
-        accountNumber: getRandomInt(100000, 999999).toString(),
-        accountName: getRandomName().name,
-        walletNumber: getRandomInt(100000, 999999).toString(),
-        accountType: getRandomAccountType(),
-        status: getRandomStatus() as "success" | "failed" | "pending",
-      },
-    });
-  }
-  return DUMMY_ACCOUNT_LOAD_DETAIL;
-};
-
-const generateAccounts = (count: number): Account[] => {
-  const DUMMY_ACCOUNTS: Account[] = [];
-  while (DUMMY_ACCOUNTS.length < count) {
-    DUMMY_ACCOUNTS.push({
-      phoneNumber: getRandomInt(100000, 999999).toString(),
-      accountNumber: getRandomInt(100000, 999999).toString(),
-      accountName: getRandomName().name,
-      walletNumber: getRandomInt(100000, 999999).toString(),
-      accountType: getRandomAccountType(),
-      status: getRandomAccountStatus(),
-    });
-  }
-  return DUMMY_ACCOUNTS;
-};
 
 const generateAccountsPreview = (count: number): AccountLoadPreview[] => {
   const DUMMY_ACCOUNTS: AccountLoadPreview[] = [];

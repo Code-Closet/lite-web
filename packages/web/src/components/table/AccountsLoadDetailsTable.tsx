@@ -1,85 +1,68 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AgGridReact } from "ag-grid-react";
-import { ColDef } from "ag-grid-community";
-
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
-import "./style.scss";
-import { AccountLoad, AccountLoadDetail } from "../../model/account/types";
+import { useEffect, useMemo, useState } from "react";
+import { Account1 } from "../../model/account/types";
+import PaginationTable from "./pixellpay-table/PaginationTable";
 import { getAccountLoadDetails } from "../../api/account/account";
+import { AuthData } from "../../auth/AuthGuard";
+import { Batch } from "../../model/common-types";
+import Loading from "../modal/Loading";
 
-const AccountsLoadDetailsTable: React.FC<{ account: AccountLoad }> = ({
-  account,
-}) => {
-  const [rowData] = useState<AccountLoadDetail[]>();
-  const gridRef = useRef<AgGridReact<AccountLoadDetail>>(null);
-  const defaultColDef = useMemo<ColDef>(() => {
-    return {
-      resizable: true,
-      sortable: true,
-    };
-  }, []);
+const AccountsLoadDetailsTable: React.FC<{
+  account: Batch;
+}> = ({ account }) => {
+  const { user } = AuthData();
+  const [rowData, setRowData] = useState<Account1[]>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    onGridReady();
+    setLoading(true);
+    getAccountLoadDetails(account.id ?? "", user.financialEntityId).then(
+      (data) => {
+        setRowData(data.accounts);
+        setLoading(false);
+      }
+    );
   }, [account]);
 
-  const onGridReady = () => {
-    getAccountLoadDetails(account.batchId).then((data) => {
-      gridRef.current!.api.setRowData(data);
-      sizeToFit();
-    });
-  };
-
-  const sizeToFit = useCallback(() => {
-    gridRef.current!.api.sizeColumnsToFit();
+  const columns = useMemo(() => {
+    const accBulkLoadColumns = [
+      {
+        accessor: "insertTimestamp",
+        Header: "Date",
+      },
+      {
+        accessor: "batchId",
+        Header: "Bulk Load Id",
+      },
+      {
+        accessor: "phoneNumber",
+        Header: "Phone Number",
+      },
+      {
+        accessor: "accountName",
+        Header: "CBS Account Name",
+      },
+      {
+        accessor: "extAccountId",
+        Header: "CBS Account Number",
+      },
+      {
+        accessor: "accountType",
+        Header: "CBS Account Type",
+      },
+      {
+        accessor: "account.status",
+        Header: "Status",
+      },
+    ];
+    return accBulkLoadColumns;
   }, []);
-
-  const [columnDefs] = useState<ColDef[]>([
-    {
-      field: "date",
-      headerName: "Date",
-    },
-    {
-      field: "loadId",
-      headerName: "Bulk Load Id",
-    },
-    {
-      field: "account.phoneNumber",
-      headerName: "Phone Number",
-    },
-    {
-      field: "account.accountName",
-      headerName: "CBS Account Name",
-    },
-    {
-      field: "account.accountNumber",
-      headerName: "CBS Account Number",
-    },
-    {
-      field: "account.accountType",
-      headerName: "CBS Account Type",
-    },
-    {
-      field: "account.status",
-      headerName: "Status",
-    },
-  ]);
-
   return (
-    <div className="ag-theme-alpine" id="ag-grid-container">
-      <AgGridReact
-        ref={gridRef}
-        columnDefs={columnDefs}
-        rowData={rowData}
-        defaultColDef={defaultColDef}
-        onGridReady={onGridReady}
-        rowHeight={60}
-        pagination={true}
-        paginationPageSize={15}
-        onGridSizeChanged={sizeToFit}
-      ></AgGridReact>
-    </div>
+    <>
+      {loading && <Loading />}
+      {!!columns && !!rowData && (
+        <PaginationTable columns={columns} data={rowData} />
+      )}
+    </>
   );
 };
 

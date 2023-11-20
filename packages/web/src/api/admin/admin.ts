@@ -1,3 +1,4 @@
+import { User, UserResponse } from "../../model/user/types";
 import axiosInstance from "../AxiosInstance";
 
 function getRandomInt(min: number, max: number): number {
@@ -67,40 +68,8 @@ export interface DummyUser {
   status: string;
 }
 
-export interface User {
-  fiancialEntityId: string;
-  id?: string | null;
-  username: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  userType: string;
-  status: string;
-  insertTimestamp?: string | null;
-  insertUser?: string | null;
-  updateTimestamp?: string | null;
-  updateUser?: string | null;
-}
-
-export type JSONObject<T = any> = { [key: string]: T };
-
-export interface UserResponse {
-  pageable: JSONObject;
-  totalElements: number;
-  totalPages: number;
-  last: boolean;
-  size: number;
-  number: number;
-  sort: JSONObject;
-  numberOfElements: number;
-  first: boolean;
-  empty: boolean;
-  content: User[];
-}
-
 export const fetchAllUsers = (
-  fiancialEntityId: string
+  fiancialEntityId: number
 ): Promise<UserResponse> => {
   return axiosInstance
     .get(
@@ -112,20 +81,38 @@ export const fetchAllUsers = (
     });
 };
 
-export const addUser = (newUser: User): Promise<any> => {
+export const addUser = (
+  financialEntityId: string,
+  newUser: User
+): Promise<any> => {
   return axiosInstance
-    .post(`/api/v1/${newUser.fiancialEntityId}/users`, { data: newUser })
+    .post(`/api/v1/${financialEntityId}/users`, { data: newUser })
     .then((response) => response.data)
     .catch((error) => {
       throw error;
     });
 };
 
-export const updateUser = (updatedUser: User): Promise<any> => {
+export const updateUser = (
+  financialEntityId: string,
+  updatedUser: User
+): Promise<any> => {
   return axiosInstance
-    .put(`/api/v1/${updatedUser.fiancialEntityId}/users/${updatedUser.id}`, {
+    .put(`/api/v1/${financialEntityId}/users/${updatedUser.id}`, {
       data: updatedUser,
     })
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error;
+    });
+};
+
+export const deleteUser = (
+  financialEntityId: string,
+  user: User
+): Promise<any> => {
+  return axiosInstance
+    .delete(`/api/v1/${financialEntityId}/users/${user.id}`)
     .then((response) => response.data)
     .catch((error) => {
       throw error;

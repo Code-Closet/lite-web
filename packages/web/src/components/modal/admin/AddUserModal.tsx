@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import Select, { SingleValue } from "react-select";
 import "./AddUserModal.scss";
-import { User } from "../../../api/admin/admin";
 import { useRef, useState } from "react";
+import { User } from "../../../model/user/types";
 
 interface AddUserModalProp {
   user: User;
@@ -41,9 +41,9 @@ const AddUserModal: React.FC<AddUserModalProp> = ({ user, setUser, roles }) => {
       phoneNumber: phoneRef.current?.value || "",
       status: "Not logged in",
       userType: selectedRole.value,
-      fiancialEntityId: "",
+      financialEntityId: "",
       username: phoneRef.current?.value || "",
-    };  
+    };
     setUser(newUser);
   };
 

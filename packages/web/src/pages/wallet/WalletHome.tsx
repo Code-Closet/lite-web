@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Wallet.scss";
-//import WalletBulkLoadTable from "../../components/table/WalletBulkLoadTable";
-import { WalletLoad } from "../../model/wallet/types";
-//import WalletLoadDetailsTable from "../../components/table/WalletLoadDetailsTable";
-import WalletBulkLoadTable1 from "../../components/table/WalletBulkLoadTable1";
-import WalletLoadDetailsTable1 from "../../components/table/WalletLoadDetailsTable1";
+import WalletBulkLoadTable1 from "../../components/table/WalletBulkLoadTable";
+import WalletLoadDetailsTable from "../../components/table/WalletLoadDetailsTable";
+import { Batch } from "../../model/common-types";
 const WalletHome: React.FC = () => {
   const navigate = useNavigate();
   const [isSummaryView, setIsSummaryView] = useState<boolean>(true);
-  const [selectedBatch, setSelectedBatch] = useState<WalletLoad>();
+  const [selectedBatch, setSelectedBatch] = useState<Batch>();
 
   const handleAccountClick = () => {
     navigate("/transactions/account");
@@ -34,7 +32,7 @@ const WalletHome: React.FC = () => {
         />
       </div>
       <div className={`wallet-details ${!isSummaryView ? "slide-right" : ""}`}>
-        {selectedBatch && <WalletLoadDetailsTable1 wallet={selectedBatch} />}
+        {selectedBatch && <WalletLoadDetailsTable wallet={selectedBatch} />}
         <button
           type="button"
           onClick={() => setIsSummaryView((prev) => !prev)}

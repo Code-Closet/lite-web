@@ -4,17 +4,21 @@ import { RenderRoutes } from "../router/RenderRoutes";
 import { authenticateUser, authenticateUser1 } from "../api/auth/auth";
 
 interface AuthContextProps {
-  user: { name: string; isAuthenticated: boolean };
+  user: { name: string; isAuthenticated: boolean; financialEntityId: number };
   login?: (a: string, b: string) => Promise<string>;
   logout?: () => void;
 }
 const AuthContext = createContext<AuthContextProps>({
-  user: { name: "", isAuthenticated: false },
+  user: { name: "", isAuthenticated: false, financialEntityId: 0 },
 });
 export const AuthData = () => useContext(AuthContext);
 
 export const AuthGuard = () => {
-  const [user, setUser] = useState({ name: "", isAuthenticated: false });
+  const [user, setUser] = useState({
+    name: "",
+    isAuthenticated: false,
+    financialEntityId: 0,
+  });
 
   const login = (userName: string, password: string): Promise<string> => {
     // Make a call to the authentication API to check the username
@@ -25,6 +29,7 @@ export const AuthGuard = () => {
           setUser({
             name: response.user,
             isAuthenticated: response.isAuthenticated,
+            financialEntityId: response.financialEntityId,
           });
           resolve("success");
         })
@@ -37,6 +42,7 @@ export const AuthGuard = () => {
           setUser({
             name: response.user,
             isAuthenticated: response.isAuthenticated,
+            financialEntityId: response.financialEntityId,
           });
           resolve("success");
         })

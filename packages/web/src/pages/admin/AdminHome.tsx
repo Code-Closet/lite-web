@@ -3,19 +3,22 @@ import React, { useCallback, useEffect, useState } from "react";
 import Modal, { ModalVariant } from "../../components/modal/Modal";
 import "./AdminHome.scss";
 import AddUserModal from "../../components/modal/admin/AddUserModal";
-import { User, getRoles } from "../../api/admin/admin";
+import { addUser, getRoles } from "../../api/admin/admin";
 import { toast } from "react-toastify";
 //import Table from "../../components/table/pixellpay-table/Table";
 import AdminTable from "../../components/table/AdminTable";
+import { AuthData } from "../../auth/AuthGuard";
+import { User } from "../../model/user/types";
 
 const AdminHome: React.FC = () => {
+  const { user: loggedInUser } = AuthData();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [newUser, setNewUser] = useState<User>({
     firstName: "",
     lastName: "",
     email: "",
     userType: "",
-    fiancialEntityId: "",
+    financialEntityId: loggedInUser.financialEntityId.toString(),
     username: "",
     status: "",
     phoneNumber: "",
@@ -30,9 +33,10 @@ const AdminHome: React.FC = () => {
 
   const onAddNewUser = useCallback(() => {
     console.log("new user", newUser);
-    // api to modify user
-    setOpenModal(false);
-    toast.success("User modified successfully");
+    addUser(loggedInUser.financialEntityId.toString(), newUser).then(() => {
+      setOpenModal(false);
+      toast.success("User modified successfully");
+    });
   }, [newUser]);
   return (
     <>

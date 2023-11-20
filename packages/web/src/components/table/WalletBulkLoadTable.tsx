@@ -1,90 +1,82 @@
-import { Fragment, useCallback, useMemo, useRef, useState } from "react";
-import { AgGridReact } from "ag-grid-react";
-import { ColDef } from "ag-grid-community";
-
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
-import "./style.scss";
-import { WalletLoad } from "../../model/wallet/types";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { getWalletLoads } from "../../api/wallet/wallet";
-import WalletDetailRenderer from "./cell/WalletDetailRenderer";
+import PaginationTable from "./pixellpay-table/PaginationTable";
+import { Batch } from "../../model/common-types";
+import { AuthData } from "../../auth/AuthGuard";
+import Loading from "../modal/Loading";
 
 const WalletBulkLoadTable: React.FC<{
   setIsSummaryView: (view: boolean) => void;
-  setSelectedBatch: (batch: WalletLoad) => void;
+  setSelectedBatch: (batch: Batch) => void;
 }> = ({ setIsSummaryView, setSelectedBatch }) => {
-  const [rowData, setRowData] = useState<WalletLoad[]>();
-  const gridRef = useRef<AgGridReact<WalletLoad>>(null);
-  const defaultColDef = useMemo<ColDef>(() => {
-    return {
-      resizable: true,
-      sortable: true,
-    };
-  }, []);
+  const { user } = AuthData();
+  const [rowData, setRowData] = useState<Batch[]>();
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const onGridReady = useCallback(() => {
-    getWalletLoads().then((data) => {
-      setRowData(data);
-      sizeToFit();
+  useEffect(() => {
+    setLoading(true);
+    getWalletLoads(user.financialEntityId).then((data) => {
+      setRowData(data.content);
+      setLoading(false);
     });
   }, []);
 
-  const sizeToFit = useCallback(() => {
-    gridRef.current!.api.sizeColumnsToFit();
-  }, []);
-
-  const onClick = useCallback((wallet: WalletLoad) => {
+  const onClick = useCallback((wallet: Batch) => {
     setIsSummaryView(false);
     setSelectedBatch(wallet);
   }, []);
 
-  const [columnDefs] = useState<ColDef[]>([
-    {
-      field: "batchId",
-      headerName: "Batch Id",
-      filter: "agTextColumnFilter",
-    },
-    {
-      field: "date",
-      headerName: "Date",
-    },
-    {
-      field: "totalAmount",
-      headerName: "Total (Success) Amount",
-    },
-    {
-      field: "totalSuccess",
-      headerName: "Total Success(transactions)",
-    },
-    {
-      field: "totalFailed",
-      headerName: "Total Failed(transactions)",
-    },
-    {
-      headerName: "",
-      cellRenderer: WalletDetailRenderer,
-      cellRendererParams: {
-        onClick: onClick.bind(this),
+  const columns = useMemo(() => {
+    const walletLoadColumns = [
+      {
+        accessor: "id",
+        Header: "Batch Id",
       },
-    },
-  ]);
-
+      {
+        accessor: "batchType",
+        Header: "Batch Type",
+      },
+      {
+        insertTimestamp: "date",
+        Header: "Date",
+      },
+      {
+        accessor: "totalAmount",
+        Header: "Total (Success) Amount",
+      },
+      {
+        accessor: "totalSuccess",
+        Header: "Total Success(transactions)",
+      },
+      {
+        accessor: "totalFailed",
+        Header: "Total Failed(transactions)",
+      },
+      {
+        Header: " ",
+        Cell: (params: any) => {
+          return (
+            <>
+              <div
+                className="wallet-detail-action-button"
+                onClick={() => onClick(params.row.original)}
+              >
+                <i className="bx bx-wallet"></i>
+              </div>
+            </>
+          );
+        },
+      },
+    ];
+    return walletLoadColumns;
+  }, []);
   return (
-    <Fragment>
-      <div className="ag-theme-alpine" id="ag-grid-container">
-        <AgGridReact
-          ref={gridRef}
-          columnDefs={columnDefs}
-          rowData={rowData}
-          defaultColDef={defaultColDef}
-          onGridReady={onGridReady}
-          rowHeight={60}
-          pagination={true}
-          paginationPageSize={15}
-          onGridSizeChanged={sizeToFit}
-        ></AgGridReact>
-      </div>
-    </Fragment>
+    <>
+      {loading && <Loading />}
+      {!!columns && !!rowData && (
+        <PaginationTable columns={columns} data={rowData} />
+      )}
+    </>
   );
 };
 

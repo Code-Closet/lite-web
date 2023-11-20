@@ -1,93 +1,69 @@
-import { useCallback, useMemo, useRef, useState } from "react";
-import { AgGridReact } from "ag-grid-react";
-import { ColDef, IRowNode } from "ag-grid-community";
-
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
-import "./style.scss";
+import { useEffect, useMemo, useState } from "react";
 import { WalletLoadPreview } from "../../model/wallet/types";
-import ValidationCellRenderer, {
-  ValidationCellRendererParams,
-} from "./cell/ValidationCellRenderer";
+import RowSelectionTable from "./pixellpay-table/RowSelectionTable";
 
-interface WalletLoadPreviewTableProps {
+const WalletLoadPreviewTable: React.FC<{
   previewRowData: WalletLoadPreview[];
-}
-const WalletLoadPreviewTable: React.FC<WalletLoadPreviewTableProps> = ({
-  previewRowData,
-}) => {
+}> = ({ previewRowData }) => {
   const [rowData, setRowData] = useState<WalletLoadPreview[]>();
-  const gridRef = useRef<AgGridReact<WalletLoadPreview>>(null);
+  const [selectedRow, setSelectedRow] = useState<WalletLoadPreview>();
 
-  const onGridReady = useCallback(() => {
+  useEffect(() => {
     setRowData(previewRowData);
-    sizeToFit();
-  }, []);
+    console.log("selected", selectedRow);
+  }, [previewRowData]);
 
-  const sizeToFit = useCallback(() => {
-    gridRef.current!.api.sizeColumnsToFit();
-  }, []);
-
-  const defaultColDef = useMemo<ColDef>(() => {
-    return {
-      resizable: true,
-      sortable: true,
-    };
-  }, []);
-
-  const [columnDefs] = useState<ColDef[]>([
-    {
-      field: "name",
-      headerName: "Name",
-      filter: "agTextColumnFilter",
-      headerCheckboxSelection: true,
-      checkboxSelection: true,
-      showDisabledCheckboxes: true,
-    },
-    {
-      field: "phoneNumber",
-      headerName: "Phone Number",
-    },
-    {
-      field: "accountNumber",
-      headerName: "Account",
-    },
-    {
-      field: "walletNumber",
-      headerName: "Wallet",
-    },
-    {
-      field: "amount",
-      headerName: "Amount",
-    },
-    {
-      headerName: "Validations",
-      cellRenderer: ValidationCellRenderer,
-      valueGetter: (params): ValidationCellRendererParams => {
-        return { isValid: params.data?.isValid, message: params.data?.message };
+  const columns = useMemo(() => {
+    const previewColumns = [
+      {
+        accessor: "name",
+        Header: "Name",
       },
-    },
-  ]);
+      {
+        accessor: "phoneNumber",
+        Header: "Phone Number",
+      },
+      {
+        accessor: "accountNumber",
+        Header: "Account",
+      },
+      {
+        accessor: "walletNumber",
+        Header: "Wallet",
+      },
+      {
+        accessor: "amount",
+        Header: "Amount",
+      },
+      {
+        Header: "Validations",
+        Cell: (params: any) => {
+          return (
+            <div className="validation-cell">
+              {params.row.original?.isValid ? (
+                <i className="bx bxs-check-circle success"></i>
+              ) : (
+                <i className="bx bxs-error error"></i>
+              )}
+              <span>{params.row.original?.message}</span>
+            </div>
+          );
+        },
+      },
+    ];
+    return previewColumns;
+  }, []);
 
   return (
-    <div className="ag-theme-alpine" id="ag-grid-container">
-      <AgGridReact
-        ref={gridRef}
-        columnDefs={columnDefs}
-        rowData={rowData}
-        defaultColDef={defaultColDef}
-        onGridReady={onGridReady}
-        rowHeight={60}
-        pagination={true}
-        paginationPageSize={15}
-        onGridSizeChanged={sizeToFit}
-        rowSelection="multiple"
-        suppressRowClickSelection={true}
-        isRowSelectable={(params: IRowNode<WalletLoadPreview>): boolean => {
-          return (!!params.data && params.data.isValid) || false;
-        }}
-      ></AgGridReact>
-    </div>
+    <>
+      {!!columns && !!rowData && (
+        <RowSelectionTable
+          columns={columns}
+          data={rowData}
+          setSelectedRows={setSelectedRow}
+        />
+      )}
+    </>
   );
 };
 
