@@ -16,27 +16,31 @@ export const getAccountLoadDetails = async (
     .then((response) => response.data);
 };
 
-export const getAccounts = async (
-  financialEntityId: number
-): Promise<AccountList> => {
+export const getAccounts = async (url: string): Promise<AccountList> => {
   return axiosInstance
-    .get(`/api/v1/${financialEntityId}/account?page=0&size=100&sort=id`)
+    .get(url)
     .then((response) => response.data)
     .catch((error) => {
       throw error;
     });
 };
 
+export const fileUpload = async (
+  financialEntityId: number,
+  file_type: string,
+  file: FormData
+) => {
+  return axiosInstance.post(
+    `/api/v1/${financialEntityId}/batch/file?file_type=${file_type}`,
+    file
+  );
+};
 export const accountLoadPreview = async (): Promise<AccountLoadPreview[]> => {
   return Promise.resolve(generateAccountsPreview(10));
 };
 
-export const accountBulkLoad = async (
-  financialEntityId: number
-): Promise<BatchLoad> => {
-  return axiosInstance
-    .get(`/api/v1/${financialEntityId}/account/batch?page=0&size=10&sort=id`)
-    .then((response) => response.data);
+export const accountBulkLoad = async (url: string): Promise<BatchLoad> => {
+  return axiosInstance.get(url).then((response) => response.data);
 };
 
 /*-----------------------------------------------------*/

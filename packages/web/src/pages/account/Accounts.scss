@@ -158,6 +158,12 @@
   align-items: center;
   gap: 5px;
   padding-inline: 10px;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: var(--secondary-text-color);
+    cursor: none;
+  }
 }
 
 .file-upload-container .file-upload-section {

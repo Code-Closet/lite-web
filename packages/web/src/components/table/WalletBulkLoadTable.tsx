@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { getWalletLoads } from "../../api/wallet/wallet";
-import PaginationTable from "./pixellpay-table/PaginationTable";
+//import PaginationTable from "./pixellpay-table/PaginationTable";
 import { Batch } from "../../model/common-types";
 import { AuthData } from "../../auth/AuthGuard";
 import Loading from "../modal/Loading";
+import useTableRequestParam from "../../hooks/table/useTableRequestParam";
+import ServerSidePaginationTable from "./pixellpay-table/ServerSidePaginationTable";
+import { formatDateToCustomString } from "../../utils/tableUtils";
 
 const WalletBulkLoadTable: React.FC<{
   setIsSummaryView: (view: boolean) => void;
@@ -12,14 +15,29 @@ const WalletBulkLoadTable: React.FC<{
   const { user } = AuthData();
   const [rowData, setRowData] = useState<Batch[]>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const apiEndpoint = `/api/v1/${user.financialEntityId}/wallets/load/batch`;
+
+  const {
+    getRequestUrl,
+    requestUrl,
+    page,
+    size,
+    canPrevious,
+    canNext,
+    resetPage,
+  } = useTableRequestParam(apiEndpoint);
 
   useEffect(() => {
+    if (!requestUrl) return;
     setLoading(true);
-    getWalletLoads(user.financialEntityId).then((data) => {
+    getWalletLoads(requestUrl).then((data) => {
+      setTotalCount(data.totalElements);
+      resetPage(page, size, data.totalElements);
       setRowData(data.content);
       setLoading(false);
     });
-  }, []);
+  }, [requestUrl]);
 
   const onClick = useCallback((wallet: Batch) => {
     setIsSummaryView(false);
@@ -37,7 +55,8 @@ const WalletBulkLoadTable: React.FC<{
         Header: "Batch Type",
       },
       {
-        insertTimestamp: "date",
+        accessor: (row: Batch) =>
+          formatDateToCustomString(row.insertTimestamp ?? ""),
         Header: "Date",
       },
       {
@@ -70,11 +89,24 @@ const WalletBulkLoadTable: React.FC<{
     ];
     return walletLoadColumns;
   }, []);
+
+  const sortBy = useMemo(() => [{ id: "id", desc: false }], []);
   return (
     <>
       {loading && <Loading />}
       {!!columns && !!rowData && (
-        <PaginationTable columns={columns} data={rowData} />
+        <ServerSidePaginationTable
+          columns={columns}
+          data={rowData}
+          fetchData={getRequestUrl}
+          currentPage={page}
+          loading={loading}
+          canPrevious={canPrevious}
+          canNext={canNext}
+          totalCount={totalCount}
+          totalPage={Math.ceil(totalCount / size)}
+          sortBy={sortBy}
+        />
       )}
     </>
   );

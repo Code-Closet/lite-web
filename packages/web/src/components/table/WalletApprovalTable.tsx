@@ -1,20 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
-import { Wallet } from "../../model/wallet/types";
-import { getWalletLoadDetails } from "../../api/wallet/wallet";
-//import PaginationTable from "./pixellpay-table/PaginationTable";
 import { AuthData } from "../../auth/AuthGuard";
-import { Batch } from "../../model/common-types";
-import Loading from "../modal/Loading";
+import { WorkflowState } from "../../model/approval/types";
 import useTableRequestParam from "../../hooks/table/useTableRequestParam";
+import { getWorkflow } from "../../api/approval/approval";
 import { formatDateToCustomString } from "../../utils/tableUtils";
+import Loading from "../modal/Loading";
 import ServerSidePaginationTable from "./pixellpay-table/ServerSidePaginationTable";
 
-const WalletLoadDetailsTable: React.FC<{ wallet: Batch }> = ({ wallet }) => {
+const WalletApprovalTable: React.FC = () => {
   const { user } = AuthData();
-  const [rowData, setRowData] = useState<Wallet[]>();
+  const [rowData, setRowData] = useState<WorkflowState[]>();
   const [loading, setLoading] = useState<boolean>(false);
   const [totalCount, setTotalCount] = useState<number>(0);
-  const apiEndpoint = `/api/v1/${user.financialEntityId}/wallets/load/${wallet.id}`;
+  const apiEndpoint = `/api/v1/${user.financialEntityId}/workflow`;
 
   const {
     getRequestUrl,
@@ -29,55 +27,42 @@ const WalletLoadDetailsTable: React.FC<{ wallet: Batch }> = ({ wallet }) => {
   useEffect(() => {
     if (!requestUrl) return;
     setLoading(true);
-    getWalletLoadDetails(requestUrl).then((data) => {
+    getWorkflow(user.financialEntityId).then((data) => {
       setTotalCount(data.totalElements);
       resetPage(page, size, data.totalElements);
       setRowData(data.content);
       setLoading(false);
     });
-  }, [wallet, requestUrl]);
+  }, [requestUrl]);
 
   const columns = useMemo(() => {
-    const walletLoadColumns = [
+    const approvalColumns = [
       {
-        accessor: (row: Batch) =>
+        accessor: (row: WorkflowState) =>
           formatDateToCustomString(row.insertTimestamp ?? ""),
         Header: "Date",
       },
       {
-        accessor: "loadId",
-        Header: "Bulk Load Id",
+        accessor: "currentState",
+        Header: "Current State",
       },
       {
-        accessor: "walletId",
-        Header: "Wallet",
+        accessor: "assignedTo",
+        Header: "Assignee",
       },
       {
-        accessor: "phoneNumber",
-        Header: "Phone Number",
-      },
-      {
-        accessor: "accountName",
-        Header: "CBS Account Name",
-      },
-      {
-        accessor: "accountNumber",
-        Header: "CBS Account Number",
-      },
-      {
-        accessor: "amount",
-        Header: "Amount",
+        accessor: "assignedRole",
+        Header: "Role",
       },
       {
         accessor: "status",
         Header: "Status",
       },
     ];
-    return walletLoadColumns;
+    return approvalColumns;
   }, []);
 
-  const sortBy = useMemo(() => [{ id: "loadId", desc: false }], []);
-
+  const sortBy = useMemo(() => [{ id: "id", desc: false }], []);
   return (
     <>
       {loading && <Loading />}
@@ -99,4 +84,4 @@ const WalletLoadDetailsTable: React.FC<{ wallet: Batch }> = ({ wallet }) => {
   );
 };
 
-export default WalletLoadDetailsTable;
+export default WalletApprovalTable;

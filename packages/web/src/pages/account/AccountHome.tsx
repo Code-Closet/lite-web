@@ -2,24 +2,22 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Modal, { ModalVariant } from "../../components/modal/Modal";
 import "./Accounts.scss";
-import { Account, Account1 } from "../../model/account/types";
+import { Account, Account1, AccountList } from "../../model/account/types";
 import AddAccountModal from "../../components/modal/account/AddAccountModal";
 import LoadWalletModal from "../../components/modal/account/LoadWalletModal";
 import DeactivateWalletModal from "../../components/modal/account/DeactivateWalletModal";
 import PixellpayToast from "../../components/toast/PixellpayToast";
 import FileUpload from "./FileUpload";
 import AccountSummaryTable from "../../components/table/AccountSummaryTable";
-import { AuthData } from "../../auth/AuthGuard";
 import { getAccounts } from "../../api/account/account";
 import Loading from "../../components/modal/Loading";
 const AccountHome: React.FC = () => {
-  const { user } = AuthData();
   const [isSummaryView, setIsSummaryView] = useState<boolean>(true);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [openLoadWalletModal, setOpenLoadWalletModal] =
     useState<boolean>(false);
   const [openDeactivateModal, setDeactivateModal] = useState<boolean>(false);
-  const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
+  const [selectedAccount, setSelectedAccount] = useState<Account1 | null>(null);
   const [newAccount, setNewAccount] = useState<Account>({
     phoneNumber: "",
     accountName: "",
@@ -28,8 +26,11 @@ const AccountHome: React.FC = () => {
     accountType: "",
   });
   const [fileType, setFileType] = useState<string>("account");
-  const [accountData, setAccountData] = useState<Account1[]>();
+  const [accountData, setAccountData] = useState<AccountList>(
+    {} as AccountList
+  );
   const [loading, setLoading] = useState<boolean>(false);
+  const [url, setUrl] = useState<string>("");
 
   const onAddNewAccount = useCallback(() => {
     // api to modify user
@@ -45,17 +46,18 @@ const AccountHome: React.FC = () => {
   }, [selectedAccount]);
 
   useEffect(() => {
+    if (!url) return;
     setLoading(true);
-    getAccounts(user.financialEntityId)
+    getAccounts(url)
       .then((data) => {
-        setAccountData(data.content);
+        setAccountData(data);
         setLoading(false);
       })
       .catch((error) => {
         setLoading(false);
         toast.error(`Failed to get accounts ${error}`);
       });
-  }, []);
+  }, [url]);
 
   return (
     <div className="account-container">
@@ -71,7 +73,7 @@ const AccountHome: React.FC = () => {
           <AddAccountModal account={newAccount} setAccount={setNewAccount} />
         </Modal>
       )}
-      {openLoadWalletModal && (
+      {openLoadWalletModal && !!selectedAccount && (
         <Modal
           setOpenModal={setOpenLoadWalletModal}
           title="Load Wallet"
@@ -79,10 +81,10 @@ const AccountHome: React.FC = () => {
           variant={ModalVariant.Regular}
           onProceed={onLoadWallet}
         >
-          <LoadWalletModal />
+          <LoadWalletModal account={selectedAccount} />
         </Modal>
       )}
-      {openDeactivateModal && (
+      {openDeactivateModal && !!selectedAccount && (
         <Modal
           setOpenModal={setDeactivateModal}
           title="Deactivate Wallet"
@@ -90,7 +92,7 @@ const AccountHome: React.FC = () => {
           variant={ModalVariant.Tiny}
           onProceed={onAddNewAccount}
         >
-          <DeactivateWalletModal />
+          <DeactivateWalletModal account={selectedAccount} />
         </Modal>
       )}
       <div className="account-load-action">
@@ -112,7 +114,8 @@ const AccountHome: React.FC = () => {
             handleLoadWallet={() => setOpenLoadWalletModal(true)}
             handleDeactivateWallet={() => setDeactivateModal(true)}
             setSelectedAccount={setSelectedAccount}
-            accountData={accountData ?? []}
+            accountData={accountData}
+            setUrl={setUrl}
           />
         </div>
 

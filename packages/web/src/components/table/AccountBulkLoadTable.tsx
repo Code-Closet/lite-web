@@ -1,30 +1,49 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import PaginationTable from "./pixellpay-table/PaginationTable";
+//import PaginationTable from "./pixellpay-table/PaginationTable";
 import { accountBulkLoad } from "../../api/account/account";
 import { AuthData } from "../../auth/AuthGuard";
 import { Batch } from "../../model/common-types";
 import Loading from "../modal/Loading";
+import useTableRequestParam from "../../hooks/table/useTableRequestParam";
+import { formatDateToCustomString } from "../../utils/tableUtils";
+import ServerSidePaginationTable from "./pixellpay-table/ServerSidePaginationTable";
 
 const AccountsBulkLoadTable: React.FC<{
   setIsSummaryView: (view: boolean) => void;
   setSelectedBatch: (batch: Batch) => void;
 }> = ({ setIsSummaryView, setSelectedBatch }) => {
+  const { user } = AuthData();
+
   const [rowData, setRowData] = useState<Batch[]>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const apiEndpoint = `/api/v1/${user.financialEntityId}/account/batch`;
+
+  const {
+    getRequestUrl,
+    requestUrl,
+    page,
+    size,
+    canPrevious,
+    canNext,
+    resetPage,
+  } = useTableRequestParam(apiEndpoint);
+
   const onClick = useCallback((accountLoad: Batch) => {
     setIsSummaryView(false);
     setSelectedBatch(accountLoad);
   }, []);
 
-  const { user } = AuthData();
-
   useEffect(() => {
+    if (!requestUrl) return;
     setLoading(true);
-    accountBulkLoad(user.financialEntityId).then((data) => {
+    accountBulkLoad(requestUrl).then((data) => {
+      setTotalCount(data.totalElements);
+      resetPage(page, size, data.totalElements);
       setRowData(data.content);
       setLoading(false);
     });
-  }, []);
+  }, [requestUrl]);
 
   const columns = useMemo(() => {
     const accBulkLoadColumns = [
@@ -34,7 +53,8 @@ const AccountsBulkLoadTable: React.FC<{
       },
       {
         Header: "Date",
-        accessor: "insertTimestamp",
+        accessor: (row: Batch) =>
+          formatDateToCustomString(row.insertTimestamp ?? ""),
       },
       {
         accessor: "totalSuccess",
@@ -63,11 +83,24 @@ const AccountsBulkLoadTable: React.FC<{
     return accBulkLoadColumns;
   }, []);
 
+  const sortBy = useMemo(() => [{ id: "id", desc: false }], []);
+
   return (
     <>
       {loading && <Loading />}
       {!!columns && !!rowData && (
-        <PaginationTable columns={columns} data={rowData} />
+        <ServerSidePaginationTable
+          columns={columns}
+          data={rowData}
+          fetchData={getRequestUrl}
+          currentPage={page}
+          loading={loading}
+          canPrevious={canPrevious}
+          canNext={canNext}
+          totalCount={totalCount}
+          totalPage={Math.ceil(totalCount / size)}
+          sortBy={sortBy}
+        />
       )}
     </>
   );

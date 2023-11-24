@@ -10,10 +10,12 @@ import Modal, { ModalVariant } from "../modal/Modal";
 import ModifyUserModal from "../modal/admin/ModifyUserModal";
 import { toast } from "react-toastify";
 import DeleteUserModal from "../modal/admin/DeleteUserModal";
-import PaginationTable from "./pixellpay-table/PaginationTable";
+//import PaginationTable from "./pixellpay-table/PaginationTable";
 import { AuthData } from "../../auth/AuthGuard";
 import { User, UserResponse } from "../../model/user/types";
 import Loading from "../modal/Loading";
+import useTableRequestParam from "../../hooks/table/useTableRequestParam";
+import ServerSidePaginationTable from "./pixellpay-table/ServerSidePaginationTable";
 
 const AdminTable: React.FC = () => {
   const [modifyUserModal, setModifyUserModal] = useState<boolean>(false);
@@ -23,16 +25,30 @@ const AdminTable: React.FC = () => {
   const [roles, setRoles] = useState<{ value: string; label: string }[]>([]);
   const [users, setUsers] = useState<UserResponse>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [totalCount, setTotalCount] = useState<number>(0);
 
   const { user: loggedInUser } = AuthData();
+  const apiEndpoint = `/api/v1/${loggedInUser.financialEntityId}/users`;
+  const {
+    getRequestUrl,
+    requestUrl,
+    page,
+    size,
+    canPrevious,
+    canNext,
+    resetPage,
+  } = useTableRequestParam(apiEndpoint);
   useEffect(() => {
+    if (!requestUrl) return;
     setLoading(true);
-    fetchAllUsers(loggedInUser.financialEntityId).then((users) => {
+    fetchAllUsers(requestUrl).then((users) => {
+      setTotalCount(users.totalElements);
+      resetPage(page, size, users.totalElements);
       setUsers(users);
       setLoading(false);
     });
     initRoles();
-  }, []);
+  }, [requestUrl]);
 
   const initRoles = useCallback(() => {
     getRoles().then((roles) => {
@@ -75,6 +91,8 @@ const AdminTable: React.FC = () => {
     // api to modify user
   }, [selectedUser, modifiedUser]);
 
+  const sortBy = useMemo(() => [{ id: "username", desc: false }], []);
+
   const columns = useMemo(() => {
     const adminColumns = [
       {
@@ -110,7 +128,7 @@ const AdminTable: React.FC = () => {
                     setSelectedUser(params.row.original);
                   }}
                 >
-                  <img src="./assets/admin/modify.svg" alt="modify" />
+                  <i className="bx bxs-user-detail"></i>
                   <label htmlFor="modify" style={{ cursor: "pointer" }}>
                     Modify User
                   </label>
@@ -122,7 +140,7 @@ const AdminTable: React.FC = () => {
                     setSelectedUser(params.row.original);
                   }}
                 >
-                  <img src="./assets/admin/delete.svg" alt="delete" />
+                  <i className="bx bxs-user-x"></i>
                   <label htmlFor="modify" style={{ cursor: "pointer" }}>
                     Remove User
                   </label>
@@ -179,7 +197,18 @@ const AdminTable: React.FC = () => {
       )}
       {loading && <Loading />}
       {!!columns && !!users && (
-        <PaginationTable columns={columns} data={users.content} />
+        <ServerSidePaginationTable
+          columns={columns}
+          data={users.content}
+          fetchData={getRequestUrl}
+          currentPage={page}
+          loading={loading}
+          canPrevious={canPrevious}
+          canNext={canNext}
+          totalCount={totalCount}
+          totalPage={Math.ceil(totalCount / size)}
+          sortBy={sortBy}
+        />
       )}
     </Fragment>
   );

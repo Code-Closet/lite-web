@@ -2,22 +2,15 @@ import { BatchLoad } from "../../model/common-types";
 import { WalletLoad, WalletLoadPreview } from "../../model/wallet/types";
 import axios from "../AxiosInstance";
 
-export const getWalletLoads = async (
-  financialEntityId: number
-): Promise<BatchLoad> => {
-  const response = await axios.get(
-    `/api/v1/${financialEntityId}/wallets/load/batch?page=0&size=100&sort=id`
-  );
+export const getWalletLoads = async (url: string): Promise<BatchLoad> => {
+  const response = await axios.get(url);
   return response.data;
 };
 
 export const getWalletLoadDetails = async (
-  financialEntityId: number,
-  loadId: string
+  url: string
 ): Promise<WalletLoad> => {
-  const response = await axios.get(
-    `/api/v1/${financialEntityId}/wallets/load/${loadId}?page=0&size=100&sort=id`
-  );
+  const response = await axios.get(url);
   return response.data;
 };
 

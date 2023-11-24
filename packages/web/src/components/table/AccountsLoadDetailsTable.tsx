@@ -5,6 +5,7 @@ import { getAccountLoadDetails } from "../../api/account/account";
 import { AuthData } from "../../auth/AuthGuard";
 import { Batch } from "../../model/common-types";
 import Loading from "../modal/Loading";
+import { formatDateToCustomString } from "../../utils/tableUtils";
 
 const AccountsLoadDetailsTable: React.FC<{
   account: Batch;
@@ -26,7 +27,8 @@ const AccountsLoadDetailsTable: React.FC<{
   const columns = useMemo(() => {
     const accBulkLoadColumns = [
       {
-        accessor: "insertTimestamp",
+        accessor: (row: Batch) =>
+          formatDateToCustomString(row.insertTimestamp ?? ""),
         Header: "Date",
       },
       {

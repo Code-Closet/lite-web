@@ -20,12 +20,40 @@ const RowSelectionTable = ({
         return [
           {
             id: "selection",
-            Header: ({ getToggleAllRowsSelectedProps }) => (
-              <Checkbox {...getToggleAllRowsSelectedProps()} />
-            ),
-            Cell: ({ row }) => (
-              <Checkbox {...row.getToggleRowSelectedProps()} />
-            ),
+            Header: ({ toggleRowSelected, isAllRowsSelected, rows }) => {
+              const modifiedOnChange = (event) => {
+                rows.forEach((row) => {
+                  row.original.isValid &&
+                    toggleRowSelected(row.id, event.currentTarget.checked);
+                });
+              };
+              let selectableRowsInCurrentPage = 0;
+              let selectedRowsInCurrentPage = 0;
+              rows.forEach((row) => {
+                row.isSelected && selectedRowsInCurrentPage++;
+                row.original.isValid && selectableRowsInCurrentPage++;
+              });
+              const disabled = selectableRowsInCurrentPage === 0;
+              const checked =
+                (isAllRowsSelected ||
+                  selectableRowsInCurrentPage === selectedRowsInCurrentPage) &&
+                !disabled;
+              return (
+                <Checkbox
+                  onChange={modifiedOnChange}
+                  checked={checked}
+                  disabled={disabled}
+                />
+              );
+            },
+            Cell: ({ row }) => {
+              return (
+                <Checkbox
+                  {...row.getToggleRowSelectedProps()}
+                  disabled={!row.original.isValid}
+                />
+              );
+            },
           },
           ...columns,
         ];

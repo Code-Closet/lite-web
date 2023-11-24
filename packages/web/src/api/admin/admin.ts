@@ -40,8 +40,6 @@ const roles: string[] = [
   "L2_Approver",
 ];
 
-const userStatus: string[] = ["Active", "Inactive", "Not logged in"];
-
 export function getRandomName(): { name: string; email: string } {
   const randomFirstName =
     firstNames[Math.floor(Math.random() * firstNames.length)];
@@ -57,24 +55,19 @@ function getRandomRole(): string {
   return roles[getRandomInt(0, 6)];
 }
 
-function getRandomStatus(): string {
-  return userStatus[getRandomInt(0, 3)];
-}
-
 export interface DummyUser {
-  name: string;
+  financialEntityId: string;
+  username: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  role: string;
-  status: string;
+  phoneNumber: string;
+  userType: string;
 }
 
-export const fetchAllUsers = (
-  fiancialEntityId: number
-): Promise<UserResponse> => {
+export const fetchAllUsers = (url: string): Promise<UserResponse> => {
   return axiosInstance
-    .get(
-      `/api/v1/${fiancialEntityId}/users?page=0&size=10&sort=id&sort=username`
-    )
+    .get(url)
     .then((response) => response.data)
     .catch((error) => {
       throw error;
@@ -125,10 +118,13 @@ export const generateUsers = (count: number): DummyUser[] => {
   while (DUMMY_USERS.length < count) {
     const { name, email } = getRandomName();
     DUMMY_USERS.push({
-      name: name,
+      username: name,
       email: email,
-      role: getRandomRole(),
-      status: getRandomStatus(),
+      userType: getRandomRole(),
+      firstName: name.split(" ")[0],
+      lastName: name.split(" ")[1],
+      phoneNumber: "1234567890",
+      financialEntityId: "1",
     });
   }
   return DUMMY_USERS;
@@ -146,3 +142,33 @@ const DUMMY_ROLES: { value: string; label: string }[] = [
   { value: "l1_approver", label: "L1 Approver" },
   { value: "l2_approver", label: "L2 Approver" },
 ];
+/*
+const DUMMY_USER_RESPONSE: UserResponse = {
+  totalPages: 10,
+  totalElements: 100,
+  size: 10,
+  content: generateUsers(10),
+  number: 0,
+  sort: {
+    empty: true,
+    sorted: true,
+    unsorted: true,
+  },
+  first: true,
+  last: true,
+  numberOfElements: 0,
+  pageable: {
+    offset: 0,
+    sort: {
+      empty: true,
+      sorted: true,
+      unsorted: true,
+    },
+    pageNumber: 0,
+    pageSize: 0,
+    paged: true,
+    unpaged: true,
+  },
+  empty: true,
+};
+*/

@@ -1,25 +1,55 @@
-import { useCallback, useMemo } from "react";
-import { Account, Account1 } from "../../model/account/types";
-import PaginationTable from "./pixellpay-table/PaginationTable";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Account1, AccountList } from "../../model/account/types";
+//import PaginationTable from "./pixellpay-table/PaginationTable";
+import { AuthData } from "../../auth/AuthGuard";
+import useTableRequestParam from "../../hooks/table/useTableRequestParam";
+import ServerSidePaginationTable from "./pixellpay-table/ServerSidePaginationTable";
 
 interface AccountSummaryTableProps {
   handleLoadWallet: () => void;
   handleDeactivateWallet: () => void;
-  setSelectedAccount: (account: Account) => void;
-  accountData: Account1[];
+  setSelectedAccount: (account: Account1) => void;
+  accountData: AccountList;
+  setUrl: (url: string) => void;
 }
 const AccountSummaryTable: React.FC<AccountSummaryTableProps> = ({
   handleLoadWallet,
   handleDeactivateWallet,
   setSelectedAccount,
   accountData,
+  setUrl,
 }) => {
-  const handleWalletLoad = useCallback((account: Account) => {
+  const { user } = AuthData();
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const apiEndpoint = `/api/v1/${user.financialEntityId}/account/`;
+
+  const {
+    getRequestUrl,
+    requestUrl,
+    page,
+    size,
+    canPrevious,
+    canNext,
+    resetPage,
+  } = useTableRequestParam(apiEndpoint);
+
+  useEffect(() => {
+    if (!requestUrl) return;
+    setUrl(requestUrl);
+  }, [requestUrl]);
+
+  useEffect(() => {
+    if (!accountData) return;
+    setTotalCount(accountData.totalElements);
+    resetPage(page, size, accountData.totalElements);
+  }, [accountData]);
+
+  const handleWalletLoad = useCallback((account: Account1) => {
     setSelectedAccount(account);
     handleLoadWallet();
   }, []);
 
-  const deactivateWallet = useCallback((account: Account) => {
+  const deactivateWallet = useCallback((account: Account1) => {
     setSelectedAccount(account);
     handleDeactivateWallet();
   }, []);
@@ -35,16 +65,12 @@ const AccountSummaryTable: React.FC<AccountSummaryTableProps> = ({
         Header: "CBS Account Name",
       },
       {
-        accessor: "accountNumber",
+        accessor: "extAccountId",
         Header: "CBS Account Number",
       },
       {
         accessor: "accountType",
         Header: "CBS Account Type",
-      },
-      {
-        accessor: "status",
-        Header: "Status",
       },
       {
         Header: "Wallet",
@@ -71,13 +97,22 @@ const AccountSummaryTable: React.FC<AccountSummaryTableProps> = ({
     return accSummaryColumns;
   }, []);
 
+  const sortBy = useMemo(() => [{ id: "id", desc: false }], []);
+
   return (
     <>
-      {!!columns && !!accountData && (
-        <PaginationTable
+      {!!columns && !!accountData && !!accountData.content && (
+        <ServerSidePaginationTable
           columns={columns}
-          data={accountData}
-          hideGlobalfilter={true}
+          data={accountData.content}
+          fetchData={getRequestUrl}
+          currentPage={page}
+          loading={false}
+          canPrevious={canPrevious}
+          canNext={canNext}
+          totalCount={totalCount}
+          totalPage={Math.ceil(totalCount / size)}
+          sortBy={sortBy}
         />
       )}
     </>

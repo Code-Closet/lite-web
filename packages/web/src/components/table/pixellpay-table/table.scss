@@ -88,10 +88,18 @@ tfoot td {
 
 .action-field {
   display: flex;
+  justify-content: center;
+  align-items: center;
   margin-top: 10px;
   font-size: 12px;
   color: "#818f9a";
   margin-inline: 2rem;
+
+  label {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+  }
 }
 
 .wallet-cell-action {
@@ -126,4 +134,18 @@ tfoot td {
   color: green;
   font-size: 22px;
   margin-right: 10px;
+}
+
+.no-records-info {
+  display: grid;
+  text-align: center;
+  margin: auto;
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--secondary-text-color);
+
+  .no-records-info__icon {
+    font-size: 50px;
+    color: var(--secondary-text-color);
+  }
 }
