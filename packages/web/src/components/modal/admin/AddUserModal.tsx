@@ -1,13 +1,14 @@
 import styled from "styled-components";
 import Select, { SingleValue } from "react-select";
 import "./AddUserModal.scss";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { User } from "../../../model/user/types";
 
 interface AddUserModalProp {
   user: User;
   setUser: (user: User) => void;
   roles: { value: string; label: string }[];
+  setIsValidForm: (isValid: boolean) => void;
 }
 const Input = styled.input`
   color: #818b94;
@@ -17,7 +18,12 @@ const Input = styled.input`
   padding-inline: 0.5rem;
 `;
 
-const AddUserModal: React.FC<AddUserModalProp> = ({ user, setUser, roles }) => {
+const AddUserModal: React.FC<AddUserModalProp> = ({
+  user,
+  setUser,
+  roles,
+  setIsValidForm,
+}) => {
   const firstNameRef = useRef<HTMLInputElement>(null);
   const lastNameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -27,6 +33,7 @@ const AddUserModal: React.FC<AddUserModalProp> = ({ user, setUser, roles }) => {
     value: string;
     label: string;
   }>(roles[0]);
+
   const handleRoleChange = (
     role: SingleValue<{ value: string; label: string }>
   ): void => {
@@ -38,14 +45,27 @@ const AddUserModal: React.FC<AddUserModalProp> = ({ user, setUser, roles }) => {
       firstName: firstNameRef.current?.value || "",
       lastName: lastNameRef.current?.value || "",
       email: emailRef.current?.value || "",
-      phoneNumber: phoneRef.current?.value || "",
+      phoneNumber: `+${phoneRef.current?.value}` || "",
       status: "Not logged in",
       userType: selectedRole.value,
       financialEntityId: "",
-      username: phoneRef.current?.value || "",
+      username: `+${phoneRef.current?.value}` || "",
     };
     setUser(newUser);
   };
+
+  useEffect(() => {
+    setIsValidForm(
+      !!firstNameRef.current?.value &&
+        !!lastNameRef.current?.value &&
+        !!phoneRef.current?.value &&
+        phoneRef.current?.value.length >= 12
+    );
+  }, [
+    firstNameRef.current?.value,
+    lastNameRef.current?.value,
+    phoneRef.current?.value,
+  ]);
 
   return (
     <div className="add-user-container">
@@ -86,7 +106,13 @@ const AddUserModal: React.FC<AddUserModalProp> = ({ user, setUser, roles }) => {
         </div>
         <div className="add-input-field">
           <span>Phone Number</span>
-          <Input type="number" ref={phoneRef} onChange={onChangeInput} />
+          <Input
+            type="number"
+            ref={phoneRef}
+            onChange={onChangeInput}
+            placeholder="Should contains 12 numbers"
+            minLength={12}
+          />
         </div>
       </div>
 
