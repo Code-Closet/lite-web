@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Select, { SingleValue } from "react-select";
 import "./ModifyUserModal.scss";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { User } from "../../../model/user/types";
 
 interface ModifyUserModalProps {
@@ -9,6 +9,7 @@ interface ModifyUserModalProps {
   modifiedUser: User | undefined;
   roles: { value: string; label: string }[];
   setModifiedUser: (user: User) => any;
+  setIsValidForm: (isValid: boolean) => void;
 }
 const Input = styled.input`
   color: #818b94;
@@ -23,6 +24,7 @@ const ModifyUserModal: React.FC<ModifyUserModalProps> = ({
   modifiedUser,
   roles,
   setModifiedUser,
+  setIsValidForm,
 }) => {
   const firstNameRef = useRef<HTMLInputElement>(null);
   const lastNameRef = useRef<HTMLInputElement>(null);
@@ -52,6 +54,20 @@ const ModifyUserModal: React.FC<ModifyUserModalProps> = ({
     };
     setModifiedUser(newUser);
   };
+
+  useEffect(() => {
+    setIsValidForm(
+      !!firstNameRef.current?.value &&
+        !!lastNameRef.current?.value &&
+        !!phoneRef.current?.value &&
+        phoneRef.current?.value.length >= 12
+    );
+  }, [
+    firstNameRef.current?.value,
+    lastNameRef.current?.value,
+    phoneRef.current?.value,
+  ]);
+
   return (
     <div className="modify-user-container">
       <div className="modify-text-desc">

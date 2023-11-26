@@ -79,7 +79,10 @@ export const addUser = (
   newUser: User
 ): Promise<any> => {
   return axiosInstance
-    .post(`/api/v1/${financialEntityId}/users`, { data: newUser })
+    .post(`/api/v1/${financialEntityId}/users`, {
+      ...newUser,
+      financialEntityId,
+    })
     .then((response) => response.data)
     .catch((error) => {
       throw error;

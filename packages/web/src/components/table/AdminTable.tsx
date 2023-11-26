@@ -26,6 +26,7 @@ const AdminTable: React.FC = () => {
   const [users, setUsers] = useState<UserResponse>();
   const [loading, setLoading] = useState<boolean>(false);
   const [totalCount, setTotalCount] = useState<number>(0);
+  const [isValidForm, setIsValidForm] = useState<boolean>(true);
 
   const { user: loggedInUser } = AuthData();
   const apiEndpoint = `/api/v1/${loggedInUser.financialEntityId}/users`;
@@ -176,12 +177,14 @@ const AdminTable: React.FC = () => {
           title="Modify User"
           variant={ModalVariant.Regular}
           onProceed={onModifyUserConfirm.bind(this)}
+          isValidForm={isValidForm}
         >
           <ModifyUserModal
             user={selectedUser}
             roles={roles}
             modifiedUser={modifiedUser}
             setModifiedUser={setModifiedUser}
+            setIsValidForm={setIsValidForm}
           />
         </Modal>
       )}

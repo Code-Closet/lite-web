@@ -99,3 +99,8 @@
 #cancelBtn {
   background-color: crimson;
 }
+
+#proceedBtn:disabled {
+  cursor: none;
+  background-color: var(--secondary-color);
+}

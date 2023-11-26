@@ -32,7 +32,8 @@
 
 .sidebar .image-text img {
   margin-inline: 10px;
-  width: 230px;
+  width: 150px;
+  height: 60px;
   border-radius: 6p;
 }
 
@@ -119,4 +120,11 @@
 
 .sidebar.close header .toggle {
   transform: translateY(-50%) rotate(0deg);
+}
+
+.sidebar.close .image-text img {
+  margin-inline: 10px;
+  width: 40px;
+  height: 25px;
+  border-radius: 6p;
 }

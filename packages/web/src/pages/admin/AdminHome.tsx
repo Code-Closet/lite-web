@@ -25,6 +25,8 @@ const AdminHome: React.FC = () => {
   });
   const [roles, setRoles] = useState<{ value: string; label: string }[]>([]);
 
+  const [isValidForm, setIsValidForm] = useState<boolean>(true);
+
   useEffect(() => {
     getRoles().then((roles) => {
       setRoles(roles);
@@ -47,8 +49,14 @@ const AdminHome: React.FC = () => {
           proceedText="Add"
           variant={ModalVariant.Regular}
           onProceed={onAddNewUser}
+          isValidForm={isValidForm}
         >
-          <AddUserModal user={newUser} setUser={setNewUser} roles={roles} />
+          <AddUserModal
+            user={newUser}
+            setUser={setNewUser}
+            roles={roles}
+            setIsValidForm={setIsValidForm}
+          />
         </Modal>
       )}
       <div className="admin-container">

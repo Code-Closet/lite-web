@@ -20,6 +20,7 @@ interface ModalProps {
   cancelText?: string;
   onProceed?: () => void;
   variant?: ModalVariant;
+  isValidForm?: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -30,6 +31,7 @@ const Modal: React.FC<ModalProps> = ({
   proceedText = "Continue",
   cancelText = "Cancel",
   variant = ModalVariant.Compact,
+  isValidForm = true,
 }) => {
   return (
     <div className="modalBackground">
@@ -56,7 +58,9 @@ const Modal: React.FC<ModalProps> = ({
           >
             {cancelText}
           </button>
-          <button onClick={onProceed}>{proceedText}</button>
+          <button onClick={onProceed} disabled={!isValidForm} id="proceedBtn">
+            {proceedText}
+          </button>
         </div>
       </div>
     </div>
