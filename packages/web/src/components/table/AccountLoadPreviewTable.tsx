@@ -4,31 +4,30 @@ import RowSelectionTable from "./pixellpay-table/RowSelectionTable";
 
 const AccountLoadPreviewTable: React.FC<{
   previewRowData: AccountLoadPreview[];
-}> = ({ previewRowData }) => {
+  setSelectedRecords: (records: any[]) => void;
+}> = ({ previewRowData, setSelectedRecords }) => {
   const [rowData, setRowData] = useState<AccountLoadPreview[]>();
-  const [selectedRow, setSelectedRow] = useState<AccountLoadPreview>();
 
   useEffect(() => {
     setRowData(previewRowData);
-    console.log("selected", selectedRow);
   }, [previewRowData]);
 
   const columns = useMemo(() => {
     const previewColumns = [
       {
-        accessor: "phoneNumber",
+        accessor: "phone_number",
         Header: "Phone Number",
       },
       {
-        accessor: "accountName",
+        accessor: "account_name",
         Header: "Account Name",
       },
       {
-        accessor: "accountNumber",
+        accessor: "account_id",
         Header: "Account Number",
       },
       {
-        accessor: "accountType",
+        accessor: "account_type",
         Header: "Account Type",
       },
       {
@@ -36,7 +35,7 @@ const AccountLoadPreviewTable: React.FC<{
         Cell: (params: any) => {
           return (
             <div className="validation-cell">
-              {params.row.original?.isValid ? (
+              {params.row.original?.validations ? (
                 <i className="bx bxs-check-circle success"></i>
               ) : (
                 <i className="bx bxs-error error"></i>
@@ -55,7 +54,7 @@ const AccountLoadPreviewTable: React.FC<{
         <RowSelectionTable
           columns={columns}
           data={rowData}
-          setSelectedRows={setSelectedRow}
+          setSelectedRows={setSelectedRecords}
         />
       )}
     </>

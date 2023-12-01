@@ -10,6 +10,7 @@
     "@types/node": "^16.18.54",
     "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",
+    "http-proxy-middleware": "^2.0.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.48.2",
@@ -73,5 +74,6 @@
   "lint-staged": {
     "*": "prettier --write --ignore-unknown",
     "*.{tsx,ts}": "eslint --cache --fix"
-  }
+  },
+  "proxy": "http://localhost:8080"
 }

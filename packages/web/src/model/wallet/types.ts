@@ -20,13 +20,18 @@ export interface WalletLoadDetail {
 }
 
 export interface WalletLoadPreview {
-  name: string;
-  phoneNumber: string;
-  accountNumber: string;
-  walletNumber: string;
-  amount: number;
-  isValid: boolean;
-  message: string;
+  id: string;
+  account_credit_id: string;
+  account_number: string;
+  account_type: string;
+  phone_number: string;
+  transaction_type: string;
+  isCritical: boolean;
+  isDuplicateAmount: boolean;
+  isWarning: boolean;
+  is_duplicate_account: boolean;
+  is_selected: boolean;
+  validations: Validation[];
 }
 
 /************************************************ */
@@ -41,4 +46,11 @@ export interface Wallet extends Model {
   fileDetail: string;
   batchId: string;
   loadType: string;
+}
+
+interface Validation {
+  code: string;
+  message: string;
+  severity: string;
+  type: string;
 }

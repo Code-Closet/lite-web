@@ -23,7 +23,7 @@ const RowSelectionTable = ({
             Header: ({ toggleRowSelected, isAllRowsSelected, rows }) => {
               const modifiedOnChange = (event) => {
                 rows.forEach((row) => {
-                  row.original.isValid &&
+                  row.original.validations &&
                     toggleRowSelected(row.id, event.currentTarget.checked);
                 });
               };
@@ -31,7 +31,7 @@ const RowSelectionTable = ({
               let selectedRowsInCurrentPage = 0;
               rows.forEach((row) => {
                 row.isSelected && selectedRowsInCurrentPage++;
-                row.original.isValid && selectableRowsInCurrentPage++;
+                row.original.validations && selectableRowsInCurrentPage++;
               });
               const disabled = selectableRowsInCurrentPage === 0;
               const checked =
@@ -50,7 +50,7 @@ const RowSelectionTable = ({
               return (
                 <Checkbox
                   {...row.getToggleRowSelectedProps()}
-                  disabled={!row.original.isValid}
+                  disabled={!row.original.validations}
                 />
               );
             },
@@ -106,9 +106,6 @@ const RowSelectionTable = ({
                 </tr>
               );
             })}
-            <tr>
-              <td></td>
-            </tr>
           </tbody>
         </table>
       </div>

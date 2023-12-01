@@ -25,12 +25,24 @@ export interface Account {
 }
 
 export interface AccountLoadPreview {
-  accountNumber: string;
-  accountName: string;
-  accountType: string;
-  phoneNumber: string;
-  isValid: boolean;
-  message: string;
+  id: string;
+  batchId: string;
+  financialEntityId: number;
+  isDuplicate: boolean;
+  branch_id: string;
+  customer_id: string;
+  account_id: string;
+  account_name: string;
+  account_type: string;
+  phone_number: string;
+  validations: any[];
+}
+
+export interface AccountBulkLoadResponse {
+  batchId: string;
+  isPreview: boolean;
+  wallet_loads: any;
+  account_loads: AccountLoadPreview[];
 }
 /************************************************ */
 
@@ -46,7 +58,7 @@ export interface Account1 extends Model {
 
 export interface AccountBatchDetail {
   batch: Batch;
-  accounts: Account1[];
+  accounts: AccountList;
   status: string;
 }
 

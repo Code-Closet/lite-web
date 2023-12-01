@@ -17,7 +17,10 @@ import Loading from "../modal/Loading";
 import useTableRequestParam from "../../hooks/table/useTableRequestParam";
 import ServerSidePaginationTable from "./pixellpay-table/ServerSidePaginationTable";
 
-const AdminTable: React.FC = () => {
+const AdminTable: React.FC<{ isAdded: boolean; user: User }> = ({
+  isAdded,
+  user: newUser,
+}) => {
   const [modifyUserModal, setModifyUserModal] = useState<boolean>(false);
   const [deleteUserModal, setDeleteUserModal] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -40,6 +43,7 @@ const AdminTable: React.FC = () => {
     resetPage,
   } = useTableRequestParam(apiEndpoint);
   useEffect(() => {
+    console.log("new user", newUser);
     if (!requestUrl) return;
     setLoading(true);
     fetchAllUsers(requestUrl).then((users) => {
@@ -49,7 +53,7 @@ const AdminTable: React.FC = () => {
       setLoading(false);
     });
     initRoles();
-  }, [requestUrl]);
+  }, [requestUrl, isAdded]);
 
   const initRoles = useCallback(() => {
     getRoles().then((roles) => {
@@ -80,6 +84,16 @@ const AdminTable: React.FC = () => {
     console.log("modify user", modifiedUser);
     updateUser(loggedInUser.financialEntityId.toString(), modifiedUser)
       .then(() => {
+        if (users && users.content) {
+          const updatedUsers = users?.content.map((user) => {
+            if (user.id === modifiedUser.id) {
+              return modifiedUser;
+            }
+            return user;
+          });
+          setUsers({ ...users, content: updatedUsers });
+        }
+
         setModifyUserModal(false);
         setSelectedUser(null);
         toast.success("User modified successfully");

@@ -95,7 +95,7 @@ export const updateUser = (
 ): Promise<any> => {
   return axiosInstance
     .put(`/api/v1/${financialEntityId}/users/${updatedUser.id}`, {
-      data: updatedUser,
+      ...updatedUser,
     })
     .then((response) => response.data)
     .catch((error) => {

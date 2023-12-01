@@ -1,11 +1,10 @@
 import {
   AccountBatchDetail,
+  AccountBulkLoadResponse,
   AccountList,
-  AccountLoadPreview,
 } from "../../model/account/types";
 import { BatchLoad } from "../../model/common-types";
 import axiosInstance from "../AxiosInstance";
-import { getRandomName } from "../admin/admin";
 
 export const getAccountLoadDetails = async (
   loadId: string,
@@ -29,45 +28,32 @@ export const fileUpload = async (
   financialEntityId: number,
   file_type: string,
   file: FormData
-) => {
-  return axiosInstance.post(
-    `/api/v1/${financialEntityId}/batch/file?file_type=${file_type}`,
-    file
-  );
-};
-export const accountLoadPreview = async (): Promise<AccountLoadPreview[]> => {
-  return Promise.resolve(generateAccountsPreview(10));
+): Promise<AccountBulkLoadResponse> => {
+  return axiosInstance
+    .post(
+      `/api/v1/${financialEntityId}/batch/file?file_type=${file_type}`,
+      file
+    )
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error;
+    });
 };
 
-export const accountBulkLoad = async (url: string): Promise<BatchLoad> => {
+export const accountBulkLoadPreview = async (
+  url: string
+): Promise<BatchLoad> => {
   return axiosInstance.get(url).then((response) => response.data);
 };
 
-/*-----------------------------------------------------*/
-
-function getRandomInt(min: number, max: number): number {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min;
-}
-
-const accountType: string[] = ["Savings", "Current", "FD"];
-
-function getRandomAccountType(): string {
-  return accountType[getRandomInt(0, 3)];
-}
-
-const generateAccountsPreview = (count: number): AccountLoadPreview[] => {
-  const DUMMY_ACCOUNTS: AccountLoadPreview[] = [];
-  while (DUMMY_ACCOUNTS.length < count) {
-    DUMMY_ACCOUNTS.push({
-      phoneNumber: getRandomInt(100000, 999999).toString(),
-      accountNumber: getRandomInt(100000, 999999).toString(),
-      accountName: getRandomName().name,
-      accountType: getRandomAccountType(),
-      isValid: false,
-      message: "Failed",
+export const accountBulkLoad = async (
+  financialEntityId: number,
+  params: any
+): Promise<any> => {
+  return axiosInstance
+    .post(`/api/v1/${financialEntityId}/account`, params)
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error;
     });
-  }
-  return DUMMY_ACCOUNTS;
 };

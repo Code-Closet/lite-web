@@ -26,6 +26,7 @@ const AdminHome: React.FC = () => {
   const [roles, setRoles] = useState<{ value: string; label: string }[]>([]);
 
   const [isValidForm, setIsValidForm] = useState<boolean>(true);
+  const [isAdded, setIsAdded] = useState<boolean>(false);
 
   useEffect(() => {
     getRoles().then((roles) => {
@@ -34,8 +35,10 @@ const AdminHome: React.FC = () => {
   });
 
   const onAddNewUser = useCallback(() => {
+    setIsAdded(false);
     console.log("new user", newUser);
     addUser(loggedInUser.financialEntityId.toString(), newUser).then(() => {
+      setIsAdded(true);
       setOpenModal(false);
       toast.success("User modified successfully");
     });
@@ -64,7 +67,7 @@ const AdminHome: React.FC = () => {
           <i className={`bx bx-user-plus`}></i>
           Add User
         </button>
-        <AdminTable />
+        <AdminTable isAdded={isAdded} user={newUser} />
       </div>
     </>
   );
