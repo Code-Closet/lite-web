@@ -8,6 +8,7 @@ import WalletLoadPreviewTable from "../../components/table/WalletLoadPreviewTabl
 import { AuthData } from "../../auth/AuthGuard";
 import { accountBulkLoad, fileUpload } from "../../api/account/account";
 import Loading from "../../components/modal/Loading";
+import { walletBulkLoad } from "../../api/wallet/wallet";
 
 interface FileUploadProps {
   setIsSummaryView: (isSummaryView: boolean) => void;
@@ -29,6 +30,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ ...props }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedBatchRecords, setSelectedBatchRecords] = useState<any[]>([]);
+  const [fileId, setFileId] = useState<string>("");
 
   const onFileChange = (event: any) => {
     setSelectedFile(event.target.files[0]);
@@ -50,6 +52,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ ...props }) => {
     if (props.fileType === "account") {
       fileUpload(user.financialEntityId, "ACCOUNT_LOAD", formData)
         .then((data) => {
+          setFileId(data.batchId);
           setAccountPreviewData(data.account_loads);
           setAccountUploadPreview(true);
           setLoading(false);
@@ -61,6 +64,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ ...props }) => {
     } else {
       fileUpload(user.financialEntityId, "WALLET_LOAD", formData)
         .then((data) => {
+          setFileId(data.batchId);
           setWalletPreviewData(data.wallet_loads);
           setWalletUploadPreview(true);
           setLoading(false);
@@ -81,7 +85,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ ...props }) => {
       if (selectedAccounts?.length > 0) {
         const params = {
           batchType: "FILE_ACCOUNT",
-          batch_id: selectedAccounts[0].batchId,
+          batch_id: fileId,
           accounts: selectedAccounts.map((account) => ({
             id: account.id as string,
           })),
@@ -96,6 +100,21 @@ const FileUpload: React.FC<FileUploadProps> = ({ ...props }) => {
       }
     } else {
       console.log("wallet load preview", selectedBatchRecords);
+      const selectedAccounts = selectedBatchRecords.map(
+        ({ original }) => original
+      );
+      const params = {
+        batchType: "FILE_WALLET",
+        file_id: fileId,
+        wallet_loads_ids: selectedAccounts.map(({ id }) => id),
+      };
+      walletBulkLoad(user.financialEntityId, params)
+        .then((data) => {
+          console.log("wallet load", data);
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
     }
   };
 

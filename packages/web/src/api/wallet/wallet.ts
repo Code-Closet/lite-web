@@ -13,3 +13,15 @@ export const getWalletLoadDetails = async (
   const response = await axios.get(url);
   return response.data;
 };
+
+export const walletBulkLoad = async (
+  financialEntityId: number,
+  params: any
+): Promise<any> => {
+  return axios
+    .post(`/api/v1/${financialEntityId}/wallet`, params)
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error;
+    });
+};
