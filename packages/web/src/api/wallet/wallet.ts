@@ -19,7 +19,7 @@ export const walletBulkLoad = async (
   params: any
 ): Promise<any> => {
   return axios
-    .post(`/api/v1/${financialEntityId}/wallet`, params)
+    .post(`/api/v1/${financialEntityId}/wallets`, params)
     .then((response) => response.data)
     .catch((error) => {
       throw error;
