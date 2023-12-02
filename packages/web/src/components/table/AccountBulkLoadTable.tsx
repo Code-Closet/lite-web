@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 //import PaginationTable from "./pixellpay-table/PaginationTable";
-import { accountBulkLoad } from "../../api/account/account";
+import { accountBulkLoadPreview } from "../../api/account/account";
 import { AuthData } from "../../auth/AuthGuard";
 import { Batch } from "../../model/common-types";
 import Loading from "../modal/Loading";
@@ -37,7 +37,7 @@ const AccountsBulkLoadTable: React.FC<{
   useEffect(() => {
     if (!requestUrl) return;
     setLoading(true);
-    accountBulkLoad(requestUrl).then((data) => {
+    accountBulkLoadPreview(requestUrl).then((data) => {
       setTotalCount(data.totalElements);
       resetPage(page, size, data.totalElements);
       setRowData(data.content);

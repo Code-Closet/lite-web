@@ -4,32 +4,31 @@ import RowSelectionTable from "./pixellpay-table/RowSelectionTable";
 
 const WalletLoadPreviewTable: React.FC<{
   previewRowData: WalletLoadPreview[];
-}> = ({ previewRowData }) => {
+  setSelectedRecords: (records: any[]) => void;
+}> = ({ previewRowData, setSelectedRecords }) => {
   const [rowData, setRowData] = useState<WalletLoadPreview[]>();
-  const [selectedRow, setSelectedRow] = useState<WalletLoadPreview>();
 
   useEffect(() => {
     setRowData(previewRowData);
-    console.log("selected", selectedRow);
   }, [previewRowData]);
 
   const columns = useMemo(() => {
     const previewColumns = [
       {
-        accessor: "name",
-        Header: "Name",
+        accessor: "account_number",
+        Header: "Account Number",
       },
       {
-        accessor: "phoneNumber",
+        accessor: "phone_number",
         Header: "Phone Number",
       },
       {
-        accessor: "accountNumber",
-        Header: "Account",
+        accessor: "account_type",
+        Header: "Account Type",
       },
       {
-        accessor: "walletNumber",
-        Header: "Wallet",
+        accessor: "transaction_type",
+        Header: "Transaction",
       },
       {
         accessor: "amount",
@@ -40,7 +39,7 @@ const WalletLoadPreviewTable: React.FC<{
         Cell: (params: any) => {
           return (
             <div className="validation-cell">
-              {params.row.original?.isValid ? (
+              {params.row.original?.validations ? (
                 <i className="bx bxs-check-circle success"></i>
               ) : (
                 <i className="bx bxs-error error"></i>
@@ -60,7 +59,7 @@ const WalletLoadPreviewTable: React.FC<{
         <RowSelectionTable
           columns={columns}
           data={rowData}
-          setSelectedRows={setSelectedRow}
+          setSelectedRows={setSelectedRecords}
         />
       )}
     </>

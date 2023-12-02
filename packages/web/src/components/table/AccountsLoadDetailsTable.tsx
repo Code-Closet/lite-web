@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { Account1 } from "../../model/account/types";
-import PaginationTable from "./pixellpay-table/PaginationTable";
 import { getAccountLoadDetails } from "../../api/account/account";
 import { AuthData } from "../../auth/AuthGuard";
 import { Batch } from "../../model/common-types";
 import Loading from "../modal/Loading";
 import { formatDateToCustomString } from "../../utils/tableUtils";
+import useTableRequestParam from "../../hooks/table/useTableRequestParam";
+import ServerSidePaginationTable from "./pixellpay-table/ServerSidePaginationTable";
 
 const AccountsLoadDetailsTable: React.FC<{
   account: Batch;
@@ -13,16 +14,31 @@ const AccountsLoadDetailsTable: React.FC<{
   const { user } = AuthData();
   const [rowData, setRowData] = useState<Account1[]>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const apiEndpoint = `/api/v1/${user.financialEntityId}/account/batch/${account.id}`;
+
+  const {
+    getRequestUrl,
+    requestUrl,
+    page,
+    size,
+    canPrevious,
+    canNext,
+    resetPage,
+  } = useTableRequestParam(apiEndpoint);
 
   useEffect(() => {
+    if (!requestUrl) return;
     setLoading(true);
     getAccountLoadDetails(account.id ?? "", user.financialEntityId).then(
-      (data) => {
-        setRowData(data.accounts);
+      ({ accounts }) => {
+        setTotalCount(accounts.totalElements);
+        resetPage(page, size, accounts.totalElements);
+        setRowData(accounts.content);
         setLoading(false);
       }
     );
-  }, [account]);
+  }, [account, requestUrl]);
 
   const columns = useMemo(() => {
     const accBulkLoadColumns = [
@@ -58,11 +74,23 @@ const AccountsLoadDetailsTable: React.FC<{
     ];
     return accBulkLoadColumns;
   }, []);
+  const sortBy = useMemo(() => [{ id: "accountName", desc: false }], []);
   return (
     <>
       {loading && <Loading />}
       {!!columns && !!rowData && (
-        <PaginationTable columns={columns} data={rowData} />
+        <ServerSidePaginationTable
+          columns={columns}
+          data={rowData}
+          fetchData={getRequestUrl}
+          currentPage={page}
+          loading={loading}
+          canPrevious={canPrevious}
+          canNext={canNext}
+          totalCount={totalCount}
+          totalPage={Math.ceil(totalCount / size)}
+          sortBy={sortBy}
+        />
       )}
     </>
   );

@@ -3,12 +3,12 @@ import PixellpayToast from "../../components/toast/PixellpayToast";
 import { AccountLoadPreview } from "../../model/account/types";
 //import { accountLoadPreview, fileUpload } from "../../api/account/account";
 import { WalletLoadPreview } from "../../model/wallet/types";
-import { getWalletLoadPreview } from "../../api/wallet/wallet";
 import AccountLoadPreviewTable from "../../components/table/AccountLoadPreviewTable";
 import WalletLoadPreviewTable from "../../components/table/WalletLoadPreviewTable";
 import { AuthData } from "../../auth/AuthGuard";
-import { accountLoadPreview, fileUpload } from "../../api/account/account";
+import { accountBulkLoad, fileUpload } from "../../api/account/account";
 import Loading from "../../components/modal/Loading";
+import { walletBulkLoad } from "../../api/wallet/wallet";
 
 interface FileUploadProps {
   setIsSummaryView: (isSummaryView: boolean) => void;
@@ -29,6 +29,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ ...props }) => {
   >([]);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [selectedBatchRecords, setSelectedBatchRecords] = useState<any[]>([]);
+  const [fileId, setFileId] = useState<string>("");
 
   const onFileChange = (event: any) => {
     setSelectedFile(event.target.files[0]);
@@ -50,35 +52,70 @@ const FileUpload: React.FC<FileUploadProps> = ({ ...props }) => {
     if (props.fileType === "account") {
       fileUpload(user.financialEntityId, "ACCOUNT_LOAD", formData)
         .then((data) => {
-          console.log("account load preview", data);
+          setFileId(data.batchId);
+          setAccountPreviewData(data.account_loads);
+          setAccountUploadPreview(true);
           setLoading(false);
         })
         .catch((error) => {
           setLoading(false);
           console.log("error", error);
         });
-      accountLoadPreview().then((data) => {
-        setAccountPreviewData(data);
-        setAccountUploadPreview(true);
-      });
     } else {
       fileUpload(user.financialEntityId, "WALLET_LOAD", formData)
         .then((data) => {
-          console.log("wallet load preview", data);
+          setFileId(data.batchId);
+          setWalletPreviewData(data.wallet_loads);
+          setWalletUploadPreview(true);
           setLoading(false);
         })
         .catch((error) => {
           setLoading(false);
           console.log("error", error);
         });
-      getWalletLoadPreview().then((data) => {
-        setWalletPreviewData(data);
-        setWalletUploadPreview(true);
-      });
     }
   };
   const handleConfirm = () => {
-    console.log("confirm clicked");
+    if (selectedBatchRecords?.length === 0) return;
+    if (props.fileType === "account") {
+      console.log("account load preview", selectedBatchRecords);
+      const selectedAccounts = selectedBatchRecords.map(
+        ({ original }) => original
+      );
+      if (selectedAccounts?.length > 0) {
+        const params = {
+          batchType: "FILE_ACCOUNT",
+          batch_id: fileId,
+          accounts: selectedAccounts.map((account) => ({
+            id: account.id as string,
+          })),
+        };
+        accountBulkLoad(user.financialEntityId, params)
+          .then((data) => {
+            console.log("account load", data);
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      }
+    } else {
+      console.log("wallet load preview", selectedBatchRecords);
+      const selectedAccounts = selectedBatchRecords.map(
+        ({ original }) => original
+      );
+      const params = {
+        batchType: "FILE_WALLET",
+        file_id: fileId,
+        wallet_loads_ids: selectedAccounts.map(({ id }) => id),
+      };
+      walletBulkLoad(user.financialEntityId, params)
+        .then((data) => {
+          console.log("wallet load", data);
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    }
   };
 
   return (
@@ -103,7 +140,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ ...props }) => {
             type="file"
             className="file-input custom-file-input"
             onChange={onFileChange}
-          />
+          ></input>
           <button type="button" onClick={handleUpload} disabled={!selectedFile}>
             <i className="bx bx-upload"></i>
             Upload
@@ -111,12 +148,18 @@ const FileUpload: React.FC<FileUploadProps> = ({ ...props }) => {
         </div>
         {accountUploadPreview && (
           <div className="account-upload-preview">
-            <AccountLoadPreviewTable previewRowData={accountPreviewData} />
+            <AccountLoadPreviewTable
+              previewRowData={accountPreviewData}
+              setSelectedRecords={setSelectedBatchRecords}
+            />
           </div>
         )}
         {wallettUploadPreview && (
           <div className="wallet-upload-preview">
-            <WalletLoadPreviewTable previewRowData={walletPreviewData} />
+            <WalletLoadPreviewTable
+              previewRowData={walletPreviewData}
+              setSelectedRecords={setSelectedBatchRecords}
+            />
           </div>
         )}
         {(accountUploadPreview || wallettUploadPreview) && (
